@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@material-ui/core";
 
 export const Dashboard = () => (
   <Card>
-    <CardHeader title="Welcome to the administration" />
-    <CardContent>Lorem ipsum sic dolor amet...</CardContent>
+    <CardHeader title="Idioma Play - Panel de Administracion" />
+    <CardContent>Estadisticas...</CardContent>
   </Card>
 );

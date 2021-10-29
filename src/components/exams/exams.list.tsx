@@ -3,16 +3,17 @@ import {
   List,
   Datagrid,
   TextField,
-  EmailField,
+  EditButton,
   NumberField,
 } from "react-admin";
 
-export const UserList = (props: any) => (
+export const ExamsList = (props: any) => (
   <List {...props}>
     <Datagrid rowClick="edit">
       <TextField source="id" />
-      <EmailField source="email" />
-      <NumberField source="points" />
+      <TextField source="title" />
+      <NumberField source="examTimeInSeconds" />
+      <EditButton />
     </Datagrid>
   </List>
 );
