@@ -12,7 +12,7 @@ export const UserList = (props: any) => (
     <Datagrid rowClick="edit">
       <TextField source="id" />
       <EmailField source="email" />
-      <NumberField source="points" />
+      <NumberField source="points" label="Puntos" />
     </Datagrid>
   </List>
 );

@@ -5,7 +5,7 @@ export const LessonsList = (props: any) => (
   <List {...props}>
     <Datagrid rowClick="edit">
       <TextField source="id" />
-      <TextField source="title" />
+      <TextField source="title" label="Titulo" />
       <EditButton />
     </Datagrid>
   </List>

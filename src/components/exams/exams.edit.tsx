@@ -9,9 +9,9 @@ import {
 export const ExamsEdit = (props: EditProps) => (
   <Edit {...props}>
     <SimpleForm>
-      <TextInput disabled source="id" />
-      <TextInput source="title" />
-      <NumberInput source="examTimeInSeconds" />
+      <TextInput disabled source="id" variant="outlined" />
+      <TextInput source="title" variant="outlined" />
+      <NumberInput source="examTimeInSeconds" variant="outlined" />
     </SimpleForm>
   </Edit>
 );

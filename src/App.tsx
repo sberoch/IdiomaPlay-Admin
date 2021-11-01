@@ -19,29 +19,59 @@ import { LessonsEdit } from "./components/lessons/lessons.edit";
 import { LessonsList } from "./components/lessons/lessons.list";
 import { ExamsList } from "./components/exams/exams.list";
 import { ExercisesEdit } from "./components/exercises/exercises.edit";
+import { theme } from "./styles/theme";
+import polyglotI18nProvider from "ra-i18n-polyglot";
+import spanishMessages from "@blackbox-vision/ra-language-spanish";
+
+const i18nProvider = polyglotI18nProvider(() => spanishMessages, "es");
 
 const App = () => (
-  <Admin dashboard={Dashboard} dataProvider={DataProvider}>
-    <Resource name="users" list={UserList} icon={UserIcon} />
+  <Admin
+    theme={theme}
+    dashboard={Dashboard}
+    dataProvider={DataProvider}
+    i18nProvider={i18nProvider}
+  >
+    <Resource
+      name="users"
+      list={UserList}
+      icon={UserIcon}
+      options={{ label: "Usuarios" }}
+    />
     <Resource
       name="challenges"
       list={ChallengesList}
       edit={ChallengesEdit}
       icon={PostIcon}
+      options={{ label: "Desafios" }}
     />
-    <Resource name="units" list={UnitsList} edit={UnitsEdit} icon={UnitIcon} />
+    <Resource
+      name="units"
+      list={UnitsList}
+      edit={UnitsEdit}
+      icon={UnitIcon}
+      options={{ label: "Unidades" }}
+    />
     <Resource
       name="lessons"
       list={LessonsList}
       edit={LessonsEdit}
       icon={LessonIcon}
+      options={{ label: "Lecciones" }}
     />
-    <Resource name="exams" list={ExamsList} edit={ExamsEdit} icon={ExamsIcon} />
+    <Resource
+      name="exams"
+      list={ExamsList}
+      edit={ExamsEdit}
+      icon={ExamsIcon}
+      options={{ label: "Examenes" }}
+    />
     <Resource
       name="exercises"
       list={ExercisesList}
       edit={ExercisesEdit}
       icon={ExercisesIcon}
+      options={{ label: "Ejercicios" }}
     />
   </Admin>
 );
