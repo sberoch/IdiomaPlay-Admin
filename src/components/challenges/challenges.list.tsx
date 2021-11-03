@@ -1,12 +1,32 @@
 import * as React from "react";
-import { List, Datagrid, TextField, EditButton } from "react-admin";
+import {
+  List,
+  Datagrid,
+  TextField,
+  EditButton,
+  TextInput,
+  TopToolbar,
+  RowClickFunction,
+  Identifier,
+} from "react-admin";
 
-export const ChallengesList = (props: any) => (
-  <List {...props}>
-    <Datagrid rowClick="edit">
-      <TextField source="id" />
-      <TextField source="title" label="Titulo" />
-      <EditButton />
-    </Datagrid>
-  </List>
-);
+const NoActions = () => <TopToolbar />;
+const filters = [
+  <TextInput source="title" label="Buscar" alwaysOn variant="outlined" />,
+];
+
+export const ChallengesList = (props: any) => {
+  const onRowClick: RowClickFunction = (
+    basePath: Identifier,
+    id: string,
+    data: any
+  ) => `/units`;
+  return (
+    <List {...props} filters={filters} actions={<NoActions />}>
+      <Datagrid rowClick={onRowClick}>
+        <TextField source="title" label="Titulo" />
+        <EditButton />
+      </Datagrid>
+    </List>
+  );
+};

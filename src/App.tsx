@@ -14,10 +14,8 @@ import { ChallengesEdit } from "./components/challenges/challenges.edit";
 import { UnitsList } from "./components/units/units.list";
 import { UnitsEdit } from "./components/units/units.edit";
 import { ExercisesList } from "./components/exercises/exercises.list";
-import { ExamsEdit } from "./components/exams/exams.edit";
 import { LessonsEdit } from "./components/lessons/lessons.edit";
 import { LessonsList } from "./components/lessons/lessons.list";
-import { ExamsList } from "./components/exams/exams.list";
 import { ExercisesEdit } from "./components/exercises/exercises.edit";
 import { theme } from "./styles/theme";
 import polyglotI18nProvider from "ra-i18n-polyglot";
@@ -58,13 +56,6 @@ const App = () => (
       edit={LessonsEdit}
       icon={LessonIcon}
       options={{ label: "Lecciones" }}
-    />
-    <Resource
-      name="exams"
-      list={ExamsList}
-      edit={ExamsEdit}
-      icon={ExamsIcon}
-      options={{ label: "Examenes" }}
     />
     <Resource
       name="exercises"

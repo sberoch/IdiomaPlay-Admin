@@ -35,9 +35,10 @@ export const DataProvider = {
     const query = {
       filter: JSON.stringify({ id: params.ids }),
     };
+    console.log("todo: check getMany");
     return api
       .get(`/${resource}`, { params: query })
-      .then(({ data }) => ({ data }));
+      .then(({ data }) => ({ data: [] }));
   },
 
   getManyReference: (resource: string, params: GetManyReferenceParams): any => {

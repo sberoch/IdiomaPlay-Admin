@@ -1,16 +1,22 @@
 import * as React from "react";
 import {
-  List,
+  TopToolbar,
   Datagrid,
-  TextField,
   EmailField,
+  List,
   NumberField,
+  TextInput,
 } from "react-admin";
 
+const NoActions = () => <TopToolbar />;
+
+const filters = [
+  <TextInput source="email" label="Buscar" alwaysOn variant="outlined" />,
+];
+
 export const UserList = (props: any) => (
-  <List {...props}>
+  <List filters={filters} {...props} actions={<NoActions />}>
     <Datagrid rowClick="edit">
-      <TextField source="id" />
       <EmailField source="email" />
       <NumberField source="points" label="Puntos" />
     </Datagrid>
