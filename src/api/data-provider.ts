@@ -8,16 +8,18 @@ import {
   UpdateParams,
 } from "ra-core";
 import api from "./axios";
+import { formatFilters } from "./utils";
 
 export const DataProvider = {
   getList: (resource: string, params: GetListParams): any => {
     const order = `${params.sort.field}:${params.sort.order.toLowerCase()}`;
     const { page, perPage: limit } = params.pagination;
+    const formattedFilters = formatFilters(params.filter);
     const query = {
       order,
       page,
       limit,
-      ...params.filter,
+      ...formattedFilters,
     };
     return api
       .get(`/${resource}`, { params: query })
@@ -35,7 +37,6 @@ export const DataProvider = {
     const query = {
       filter: JSON.stringify({ id: params.ids }),
     };
-    console.log("todo: check getMany");
     return api
       .get(`/${resource}`, { params: query })
       .then(({ data }) => ({ data: [] }));

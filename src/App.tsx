@@ -6,7 +6,6 @@ import UserIcon from "@material-ui/icons/Group";
 import UnitIcon from "@material-ui/icons/AssignmentTurnedIn";
 import LessonIcon from "@material-ui/icons/ListAlt";
 import ExercisesIcon from "@material-ui/icons/FormatListNumbered";
-import ExamsIcon from "@material-ui/icons/Timer";
 import { Dashboard } from "./components/dashboard/dashboard";
 import { DataProvider } from "./api/data-provider";
 import { ChallengesList } from "./components/challenges/challenges.list";
