@@ -20,7 +20,8 @@ export const ChallengesList = (props: any) => {
     basePath: Identifier,
     id: string,
     data: any
-  ) => `/units`;
+  ) => `/units?filter=${JSON.stringify({ challenge: data })}`;
+
   return (
     <List {...props} filters={filters} actions={<NoActions />}>
       <Datagrid rowClick={onRowClick}>

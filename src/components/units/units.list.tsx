@@ -31,7 +31,7 @@ export const UnitsList = (props: any) => {
     basePath: Identifier,
     id: string,
     data: any
-  ) => `/lessons`;
+  ) => `/lessons?filter=${JSON.stringify({ unit: data })}`;
   return (
     <List {...props} filters={filters} actions={<NoActions />}>
       <Datagrid rowClick={onRowClick}>
