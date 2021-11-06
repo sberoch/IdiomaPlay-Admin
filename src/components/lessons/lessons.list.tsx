@@ -8,9 +8,14 @@ import {
   SelectInput,
   TextInput,
   TopToolbar,
+  CreateButton,
 } from "react-admin";
 
-const NoActions = () => <TopToolbar />;
+const NoActions = () => (
+  <TopToolbar>
+    <CreateButton />
+  </TopToolbar>
+);
 const filters = [
   <TextInput source="title" label="Buscar" alwaysOn variant="outlined" />,
   <ReferenceInput

@@ -8,12 +8,20 @@ import {
   ChipField,
   TextInput,
   TopToolbar,
+  CreateButton,
 } from "react-admin";
 
-const NoActions = () => <TopToolbar />;
+const NoActions = () => (
+  <TopToolbar>
+    <CreateButton />
+  </TopToolbar>
+);
+
 const types = [
   { id: "listen", name: "listen" },
   { id: "complete", name: "complete" },
+  { id: "translate_old_to_new", name: "translate_old_to_new" },
+  { id: "translate_new_to_old", name: "translate_new_to_old" },
 ];
 const filters = [
   <TextInput source="title" label="Titulo" alwaysOn variant="outlined" />,

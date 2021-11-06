@@ -20,7 +20,11 @@ import { theme } from "./styles/theme";
 import polyglotI18nProvider from "ra-i18n-polyglot";
 import spanishMessages from "@blackbox-vision/ra-language-spanish";
 import authProvider from "./authProvider";
-import Login from "./Login"
+import Login from "./Login";
+import { ExercisesCreate } from "./components/exercises/exercises.create";
+import { LessonsCreate } from "./components/lessons/lessons.create";
+import { UnitsCreate } from "./components/units/units.create";
+import { ChallengesCreate } from "./components/challenges/challenges.create";
 
 const i18nProvider = polyglotI18nProvider(() => spanishMessages, "es");
 
@@ -43,6 +47,7 @@ const App = () => (
       name="challenges"
       list={ChallengesList}
       edit={ChallengesEdit}
+      create={ChallengesCreate}
       icon={PostIcon}
       options={{ label: "Desafios" }}
     />
@@ -50,6 +55,7 @@ const App = () => (
       name="units"
       list={UnitsList}
       edit={UnitsEdit}
+      create={UnitsCreate}
       icon={UnitIcon}
       options={{ label: "Unidades" }}
     />
@@ -57,6 +63,7 @@ const App = () => (
       name="lessons"
       list={LessonsList}
       edit={LessonsEdit}
+      create={LessonsCreate}
       icon={LessonIcon}
       options={{ label: "Lecciones" }}
     />
@@ -64,6 +71,7 @@ const App = () => (
       name="exercises"
       list={ExercisesList}
       edit={ExercisesEdit}
+      create={ExercisesCreate}
       icon={ExercisesIcon}
       options={{ label: "Ejercicios" }}
     />
