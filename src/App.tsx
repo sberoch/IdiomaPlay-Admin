@@ -19,6 +19,8 @@ import { ExercisesEdit } from "./components/exercises/exercises.edit";
 import { theme } from "./styles/theme";
 import polyglotI18nProvider from "ra-i18n-polyglot";
 import spanishMessages from "@blackbox-vision/ra-language-spanish";
+import authProvider from "./authProvider";
+import Login from "./Login"
 
 const i18nProvider = polyglotI18nProvider(() => spanishMessages, "es");
 
@@ -28,6 +30,8 @@ const App = () => (
     dashboard={Dashboard}
     dataProvider={DataProvider}
     i18nProvider={i18nProvider}
+    authProvider={authProvider}
+    loginPage={Login}
   >
     <Resource
       name="users"
