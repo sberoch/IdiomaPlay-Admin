@@ -9,6 +9,7 @@ import {
   TextInput,
   TopToolbar,
   CreateButton,
+  DeleteButton,
 } from "react-admin";
 
 const NoActions = () => (
@@ -30,10 +31,16 @@ const filters = [
 ];
 
 export const LessonsList = (props: any) => (
-  <List {...props} filters={filters} actions={<NoActions />}>
+  <List
+    {...props}
+    filters={filters}
+    actions={<NoActions />}
+    bulkActionButtons={false}
+  >
     <Datagrid rowClick="edit">
       <TextField source="title" label="Titulo" />
       <EditButton />
+      <DeleteButton />
     </Datagrid>
   </List>
 );

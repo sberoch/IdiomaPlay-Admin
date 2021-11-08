@@ -11,6 +11,7 @@ import {
   RowClickFunction,
   Identifier,
   CreateButton,
+  DeleteButton,
 } from "react-admin";
 
 const NoActions = () => (
@@ -38,10 +39,16 @@ export const UnitsList = (props: any) => {
     data: any
   ) => `/lessons?filter=${JSON.stringify({ unit: data })}`;
   return (
-    <List {...props} filters={filters} actions={<NoActions />}>
+    <List
+      {...props}
+      filters={filters}
+      actions={<NoActions />}
+      bulkActionButtons={false}
+    >
       <Datagrid rowClick={onRowClick}>
         <TextField source="title" label="Titulo" />
         <EditButton />
+        <DeleteButton />
       </Datagrid>
     </List>
   );

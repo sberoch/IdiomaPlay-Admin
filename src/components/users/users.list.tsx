@@ -6,6 +6,7 @@ import {
   List,
   NumberField,
   TextInput,
+  DeleteButton,
 } from "react-admin";
 
 const NoActions = () => <TopToolbar />;
@@ -15,10 +16,16 @@ const filters = [
 ];
 
 export const UserList = (props: any) => (
-  <List filters={filters} {...props} actions={<NoActions />}>
+  <List
+    filters={filters}
+    {...props}
+    actions={<NoActions />}
+    bulkActionButtons={false}
+  >
     <Datagrid rowClick="edit">
       <EmailField source="email" />
       <NumberField source="points" label="Puntos" />
+      <DeleteButton />
     </Datagrid>
   </List>
 );
