@@ -5,7 +5,10 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@material-ui/icons/Add';
-import { Box, Button, Container, MenuItem, Select, TextField } from '@material-ui/core';
+import { Select } from "@mui/material";
+import { Box, Button, Container, MenuItem, TextField, Typography } from '@material-ui/core';
+import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
 import api from '../../api/axios';
 
 import { useHistory } from "react-router-dom";
@@ -21,9 +24,17 @@ interface Props {
   type: string
 }
 
+const types = {
+  complete: { text: "complete", amount: 4 },
+  listen: { text: "listen", amount: 6 } ,
+  translate_old_to_new:{ text: "translate_old_to_new", amount: 6 } ,
+  translate_new_to_old: { text: "translate_new_to_old", amount: 6 } ,
+}
+
 export default function AddExerciseList(props: Props) {
+  const { type } = props;
   const [options, setOptions] = useState<Option[]>([]);
-  const [showInput, setShowInput] = useState(false);
+  // const [showInput, setShowInput] = useState(false);
   const [text, setText] = useState("");
   const [correctOption, setCorrectOption] = useState<string>("")
   let history = useHistory();
@@ -37,21 +48,23 @@ export default function AddExerciseList(props: Props) {
   }
 
   const getInput = () => {
-    if (showInput) {
+    const totalOptions = (type === types.complete.text) ? 4 : 6;
+
+    if (options.length < totalOptions) {
       return (
-        <TextField id="filled-basic" label="Name" variant="filled" value={text} onChange={handleTextChange}
+        <TextField 
+          id="filled-basic" 
+          label="Nueva opcion" 
+          variant="filled" 
+          value={text} 
+          onChange={handleTextChange}
+          size="small"
           InputProps={{endAdornment: 
             <IconButton onClick={handleNewOption}>
               <AddIcon />
             </IconButton>}}
       />
       )
-    } else {
-      return (
-        <Button onClick={() => { setShowInput(true) }}>
-         Agregar
-        </Button>
-      );
     }
   }
 
@@ -68,22 +81,31 @@ export default function AddExerciseList(props: Props) {
       options: options.map(option => option.text), 
       correctOption
     })
+    
     console.log(res);
     //Redirect
     history.push("/exercises");
   }
 
+  const removeOption = (id: number) => {
+    setOptions((prev) => {
+      return prev.filter(actualPrevOption => actualPrevOption.id !== id);
+    });
+  }
+
   return (
-    <Container>
+    <Box sx={{ marginTop: 10}}>
       <List sx={{ width: '100%', maxWidth: 360 }}>
         {options.map((option) => {
           const {id, text} = option;
-          console.log(option)
           return (
-            <ListItem key={id}>
+            <ListItem key={id} sx={{ m: 0}} divider={true}>
               <ListItemButton>
                 <ListItemText primary={text} />
               </ListItemButton>
+              <IconButton onClick={() => removeOption(id)}>
+                <CloseIcon />
+              </IconButton>
             </ListItem>
           );
         })}
@@ -92,6 +114,7 @@ export default function AddExerciseList(props: Props) {
       { getInput() }
 
       <Box sx={{ m: 5 }} />
+      <Typography variant="h6" gutterBottom>Agregar opción correcta</Typography>
 
       <Select
         labelId="demo-simple-select-label"
@@ -99,6 +122,7 @@ export default function AddExerciseList(props: Props) {
         label="Opcion correcta"
         onChange={handleCorrectOptionChange}
         value={correctOption}
+        sx={{ marginTop: 1, p:1, width: 200 }}
       >
         <MenuItem value="None">
           <em>None</em>
@@ -112,10 +136,21 @@ export default function AddExerciseList(props: Props) {
         })}
       </Select>
 
-      <Button onClick={handleSubmit}>
+      <Box sx={{ m: 5 }} />
+
+      <Button 
+        style={{
+          borderRadius: 35,
+          backgroundColor: "lightBlue",
+          padding: "18px 36px",
+          fontSize: "18px"
+        }}
+        onClick={handleSubmit} 
+        variant="contained" 
+        startIcon={<SaveIcon/>} >
         Agregar
       </Button>
       
-    </Container>
+    </Box>
   );
 }
