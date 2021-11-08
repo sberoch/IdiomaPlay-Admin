@@ -18,6 +18,7 @@ export const UnitsCreate = (props: any) => {
       console.log(lessons);
     }
     fetchLessons();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addLessonChosen = (event: any) => {
