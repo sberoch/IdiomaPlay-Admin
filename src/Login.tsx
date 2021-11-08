@@ -1,19 +1,19 @@
-import * as React from 'react';
-import { useState } from 'react';
-import { Field, withTypes } from 'react-final-form';
-import { useLocation } from 'react-router-dom';
+import * as React from "react";
+import { useState } from "react";
+import { Field, withTypes } from "react-final-form";
+import { useLocation } from "react-router-dom";
 
 import {
-    Avatar,
-    Button,
-    Card,
-    CardActions,
-    CircularProgress,
-    TextField,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import LockIcon from '@material-ui/icons/Lock';
-import { Notification, useTranslate, useLogin, useNotify } from 'react-admin';
+  Avatar,
+  Button,
+  Card,
+  CardActions,
+  CircularProgress,
+  TextField,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import LockIcon from "@material-ui/icons/Lock";
+import { Notification, useTranslate, useLogin, useNotify } from "react-admin";
 
 interface FormValues {
   email?: string;
@@ -26,52 +26,52 @@ const renderInput = ({
   ...props
 }) => (
   <TextField
-      error={!!(touched && error)}
-      helperText={touched && error}
-      {...inputProps}
-      {...props}
-      fullWidth
+    error={!!(touched && error)}
+    helperText={touched && error}
+    {...inputProps}
+    {...props}
+    fullWidth
   />
 );
 
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   main: {
-      display: 'flex',
-      flexDirection: 'column',
-      minHeight: '100vh',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      background: 'url(https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/v960-ning-30.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=63dd5f402645ef52fb7dfb592aec765a)',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover',
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100vh",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    background:
+      "url(https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/v960-ning-30.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=63dd5f402645ef52fb7dfb592aec765a)",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
   },
   card: {
-      minWidth: 300,
-      marginTop: '6em',
+    minWidth: 300,
+    marginTop: "6em",
   },
   avatar: {
-      margin: '1em',
-      display: 'flex',
-      justifyContent: 'center',
+    margin: "1em",
+    display: "flex",
+    justifyContent: "center",
   },
   icon: {
-      backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.main,
   },
   hint: {
-      marginTop: '1em',
-      display: 'flex',
-      justifyContent: 'center',
-      color: theme.palette.grey[500],
+    marginTop: "1em",
+    display: "flex",
+    justifyContent: "center",
+    color: theme.palette.grey[500],
   },
   form: {
-      padding: '0 1em 1em 1em',
+    padding: "0 1em 1em 1em",
   },
   input: {
-      marginTop: '1em',
+    marginTop: "1em",
   },
   actions: {
-      padding: '0 1em 1em 1em',
+    padding: "0 1em 1em 1em",
   },
 }));
 
@@ -87,23 +87,23 @@ const Login = () => {
 
   const handleSubmit = (auth: FormValues) => {
     setLoading(true);
-    login(auth, location.state ? location.state.nextPathname : '/').catch(
+    login(auth, location.state ? location.state.nextPathname : "/").catch(
       (error: Error) => {
         setLoading(false);
         notify(
-          typeof error === 'string'
+          typeof error === "string"
             ? error
-            : typeof error === 'undefined' || !error.message
-              ? 'ra.auth.sign_in_error'
-              : error.message,
-          'warning',
+            : typeof error === "undefined" || !error.message
+            ? "ra.auth.sign_in_error"
+            : error.message,
+          "warning",
           {
             _:
-              typeof error === 'string'
+              typeof error === "string"
                 ? error
                 : error && error.message
-                  ? error.message
-                  : undefined,
+                ? error.message
+                : undefined,
           }
         );
       }
@@ -113,10 +113,10 @@ const Login = () => {
   const validate = (values: FormValues) => {
     const errors: FormValues = {};
     if (!values.email) {
-      errors.email = translate('ra.validation.required');
+      errors.email = translate("ra.validation.required");
     }
     if (!values.password) {
-      errors.password = translate('ra.validation.required');
+      errors.password = translate("ra.validation.required");
     }
     return errors;
   };
@@ -134,9 +134,6 @@ const Login = () => {
                   <LockIcon />
                 </Avatar>
               </div>
-              <div className={classes.hint}>
-                Hint: admin@admin.com, idiomaplayadmin
-              </div>
               <div className={classes.form}>
                 <div className={classes.input}>
                   <Field
@@ -153,7 +150,7 @@ const Login = () => {
                     name="password"
                     // @ts-ignore
                     component={renderInput}
-                    label={translate('ra.auth.password')}
+                    label={translate("ra.auth.password")}
                     type="password"
                     disabled={loading}
                   />
@@ -167,13 +164,8 @@ const Login = () => {
                   disabled={loading}
                   fullWidth
                 >
-                  {loading && (
-                    <CircularProgress
-                      size={25}
-                      thickness={2}
-                    />
-                  )}
-                  {translate('ra.auth.sign_in')}
+                  {loading && <CircularProgress size={25} thickness={2} />}
+                  {translate("ra.auth.sign_in")}
                 </Button>
               </CardActions>
             </Card>
@@ -183,6 +175,6 @@ const Login = () => {
       )}
     />
   );
-}
+};
 
 export default Login;
