@@ -88,15 +88,16 @@ export default function AddExerciseList(props: Props) {
 
   const inputErrors = () => {
     const amoutOfOptions = type === types.complete.text ? types.complete.amount : types.listen.amount
-    const titleWithinRange = title.length > consts.maxTitleLength || title.length < consts.minStringLength
-    const sentenceWithinRange = sentence.length < consts.minStringLength;
+    const titleOutOfRange = title.length > consts.maxTitleLength || title.length < consts.minStringLength
+    const sentenceOutOfRange = sentence.length < consts.minStringLength;
+    const sentenceDoesntContainAsterik = !sentence.includes("*");
     const notEnoughOptions = options.length !== amoutOfOptions
     const correctOptionIsEmpty = correctOption === ""
     const correctOptionIsInOptions = options.some((actualOption:Option) => actualOption.text === correctOption)
 
-    return  !titleWithinRange || !sentenceWithinRange || 
+    return  titleOutOfRange || sentenceOutOfRange || sentenceDoesntContainAsterik ||
             notEnoughOptions || correctOptionIsEmpty || 
-            !correctOptionIsInOptions
+            !correctOptionIsInOptions 
   }
 
   const handleSubmit = async () => {
