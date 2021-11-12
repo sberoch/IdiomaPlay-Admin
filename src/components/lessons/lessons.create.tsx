@@ -4,11 +4,14 @@ import { useEffect, useState } from "react";
 import { ArrayInput, FormWithRedirect, SelectArrayInput } from "react-admin";
 import { useHistory } from "react-router-dom";
 import api from "../../api/axios";
+import { consts } from "../../common/config";
+import Alerts from "../alerts/Alerts";
 
 export const LessonsCreate = (props: any) => {
   const [title, setTitle] = useState("");
   const [exercises, setExercises] = useState([]);
   const [exercisesChosen, setExercisesChosen] = useState<string[]>([]);
+  const [showError, setShowError] = useState(false)
   let history = useHistory();
 
   useEffect(() => {
@@ -32,15 +35,28 @@ export const LessonsCreate = (props: any) => {
     setTitle(e.target.value);
   };
 
+  const inputErrors = () => {
+    const titleOutOfRange = title.length > consts.maxTitleLength || title.length < consts.minStringLength
+    const exercisesIsEmpty = exercises.length === 0
+    const lessExercisesChosenThanAmountOfExercises = exercisesChosen.length <= exercises.length
+    const noExercisesChosen = exercisesChosen.length === 0; 
+
+    return titleOutOfRange || exercisesIsEmpty || !lessExercisesChosenThanAmountOfExercises || noExercisesChosen
+  }
+
   const handleSubmit = async () => {
     //Postear al back
-    const res = await api.post("/lessons", {
-      title,
-      exercisesIds: exercisesChosen.map((actual) => +actual),
-    });
-    console.log(res);
-    //Redirect
-    history.push("/lessons");
+    if (!inputErrors()){
+      const res = await api.post("/lessons", {
+        title,
+        exercisesIds: exercisesChosen.map((actual) => +actual),
+      });
+      console.log(res);
+      //Redirect
+      history.push("/lessons");
+    } else {
+      setShowError(true);
+    }
   };
 
   return (
@@ -84,6 +100,12 @@ export const LessonsCreate = (props: any) => {
                 />
               </ArrayInput>
             </Box>
+
+            <Alerts
+              showError={showError}
+              setShowError={setShowError}
+            />
+
             <Button
               style={{
                 borderRadius: 35,

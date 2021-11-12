@@ -4,11 +4,14 @@ import { useEffect, useState } from "react";
 import { ArrayInput, FormWithRedirect, SelectArrayInput } from "react-admin";
 import { useHistory } from "react-router-dom";
 import api from "../../api/axios";
+import { consts } from "../../common/config";
+import Alerts from "../alerts/Alerts";
 
 export const UnitsCreate = (props: any) => {
   const [title, setTitle] = useState("");
   const [lessons, setLessons] = useState([]);
   const [lessonsChosen, setLessonsChosen] = useState<string[]>([]);
+  const [showError, setShowError] = useState(false)
   let history = useHistory();
 
   useEffect(() => {
@@ -32,15 +35,28 @@ export const UnitsCreate = (props: any) => {
     setTitle(e.target.value);
   };
 
+  const inputErrors = () => {
+    const titleOutOfRange = title.length > consts.maxTitleLength || title.length < consts.minStringLength
+    const lessonsIsEmpty = lessons.length === 0
+    const lessLessonsChosenThanAmountOfLessons = lessonsChosen.length <= lessons.length
+    const noLessonsChosen = lessonsChosen.length === 0; 
+
+    return titleOutOfRange || lessonsIsEmpty || !lessLessonsChosenThanAmountOfLessons || noLessonsChosen
+  }
+
   const handleSubmit = async () => {
     //Postear al back
-    const res = await api.post("/units", {
-      title,
-      lessonsIds: lessonsChosen.map((actual) => +actual),
-    });
-    console.log(res);
-    //Redirect
-    history.push("/units");
+    if (!inputErrors()) {
+      const res = await api.post("/units", {
+        title,
+        lessonsIds: lessonsChosen.map((actual) => +actual),
+      });
+      console.log(res);
+      //Redirect
+      history.push("/units");
+    } else {
+      setShowError(true);
+    }
   };
 
   return (
@@ -84,6 +100,12 @@ export const UnitsCreate = (props: any) => {
                 />
               </ArrayInput>
             </Box>
+
+            <Alerts
+              showError={showError}
+              setShowError={setShowError}
+            />
+
             <Button
               style={{
                 borderRadius: 35,

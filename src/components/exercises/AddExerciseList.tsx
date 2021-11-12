@@ -16,6 +16,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import Alerts from '../alerts/Alerts'
+import { consts } from "../../common/config";
 import api from "../../api/axios";
 
 interface Option {
@@ -27,6 +29,8 @@ interface Props {
   title: string;
   sentence: string;
   type: string;
+  options: any;
+  setOptions: any;
 }
 
 const types = {
@@ -37,11 +41,10 @@ const types = {
 };
 
 export default function AddExerciseList(props: Props) {
-  const { type } = props;
-  const [options, setOptions] = useState<Option[]>([]);
-  // const [showInput, setShowInput] = useState(false);
+  const { title, sentence, type, options, setOptions } = props;
   const [text, setText] = useState("");
   const [correctOption, setCorrectOption] = useState<string>("");
+  const [showError, setShowError] = useState(false)
   let history = useHistory();
 
   const handleTextChange = (e: any) => {
@@ -49,11 +52,14 @@ export default function AddExerciseList(props: Props) {
   };
 
   const handleNewOption = () => {
-    setOptions((prev) => [...prev, { id: options.length + 1, text: text }]);
+    //If options doesn't already exist
+    if (!options.some((actualOption: Option) => actualOption.text === text)){
+      setOptions((prev: Option[]) => [...prev, { id: options.length + 1, text: text }]);
+    }
   };
 
   const getInput = () => {
-    const totalOptions = type === types.complete.text ? 4 : 6;
+    const totalOptions = type === types.complete.text ? types.complete.amount : types.listen.amount;
 
     if (options.length < totalOptions) {
       return (
@@ -80,32 +86,48 @@ export default function AddExerciseList(props: Props) {
     setCorrectOption(event.target.value as string);
   };
 
+  const inputErrors = () => {
+    const amoutOfOptions = type === types.complete.text ? types.complete.amount : types.listen.amount
+    const titleWithinRange = title.length > consts.maxTitleLength || title.length < consts.minStringLength
+    const sentenceWithinRange = sentence.length < consts.minStringLength;
+    const notEnoughOptions = options.length !== amoutOfOptions
+    const correctOptionIsEmpty = correctOption === ""
+    const correctOptionIsInOptions = options.some((actualOption:Option) => actualOption.text === correctOption)
+
+    return  !titleWithinRange || !sentenceWithinRange || 
+            notEnoughOptions || correctOptionIsEmpty || 
+            !correctOptionIsInOptions
+  }
+
   const handleSubmit = async () => {
     //Postear al back
-    const { title, sentence, type } = props;
-    const res = await api.post("/exercises", {
-      title,
-      sentence,
-      type,
-      options: options.map((option) => option.text),
-      correctOption,
-    });
-
-    console.log(res);
-    //Redirect
-    history.push("/exercises");
+    if (!inputErrors()) {
+      const res = await api.post("/exercises", {
+        title,
+        sentence,
+        type,
+        options: options.map((option: Option) => option.text),
+        correctOption,
+      });
+  
+      console.log(res);
+      //Redirect
+      history.push("/exercises");
+    } else {
+      setShowError(true);
+    }
   };
 
   const removeOption = (id: number) => {
-    setOptions((prev) => {
-      return prev.filter((actualPrevOption) => actualPrevOption.id !== id);
+    setOptions((prev: any) => {
+      return prev.filter((actualPrevOption: any) => actualPrevOption.id !== id);
     });
   };
 
   return (
     <Box sx={{ marginTop: 10 }}>
       <List sx={{ width: "100%", maxWidth: 360 }}>
-        {options.map((option) => {
+        {options.map((option: Option) => {
           const { id, text } = option;
           return (
             <ListItem key={id} sx={{ m: 0 }} divider={true}>
@@ -135,10 +157,7 @@ export default function AddExerciseList(props: Props) {
         value={correctOption}
         sx={{ marginTop: 1, p: 1, width: 200 }}
       >
-        <MenuItem value="None">
-          <em>None</em>
-        </MenuItem>
-        {options.map((option) => {
+        {options.map((option: Option) => {
           return (
             <MenuItem key={option.id} value={option.text}>
               {option.text}
@@ -148,6 +167,11 @@ export default function AddExerciseList(props: Props) {
       </Select>
 
       <Box sx={{ m: 5 }} />
+
+      <Alerts
+        showError={showError}
+        setShowError={setShowError}
+      />
 
       <Button
         style={{

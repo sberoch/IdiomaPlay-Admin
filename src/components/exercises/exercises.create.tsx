@@ -13,8 +13,21 @@ const exerciseTypes = [
   { id: "translate_new_to_old", name: "translate_new_to_old" },
 ];
 
+const types = {
+  complete: { text: "complete", amount: 4 },
+  listen: { text: "listen", amount: 6 },
+  translate_old_to_new: { text: "translate_old_to_new", amount: 6 },
+  translate_new_to_old: { text: "translate_new_to_old", amount: 6 },
+};
+
+interface Option {
+  id: number;
+  text: string;
+}
+
 export const ExercisesCreate = (props: any) => {
   const [title, setTitle] = useState("");
+  const [options, setOptions] = useState<Option[]>([]);
   const [sentence, setSentence] = useState("");
   const [type, setType] = useState("");
 
@@ -28,6 +41,9 @@ export const ExercisesCreate = (props: any) => {
 
   const handleTypeChange = (e: any) => {
     setType(e.target.value)
+    if (e.target.value === types.complete.text && options.length > types.complete.amount) {
+      setOptions((prev) => prev.slice(0, types.complete.amount))
+    }
   }
 
   return (
@@ -66,9 +82,6 @@ export const ExercisesCreate = (props: any) => {
                 value={type}
                 sx={{ marginTop: 1, p:1, width: 200 }}
               >
-                  <MenuItem value="None">
-                    <em>None</em>
-                  </MenuItem>
                   {exerciseTypes.map((actualType) => {
                     return (
                       <MenuItem key={actualType.id} value={actualType.name}>
@@ -80,7 +93,13 @@ export const ExercisesCreate = (props: any) => {
               {type &&
                 <Box sx={{ marginTop:20, paddingTop:25}}>
                   <Typography variant="h6" gutterBottom>Agregar opciones</Typography>
-                  <AddExerciseList title={title} sentence={sentence} type={type}/>
+                  <AddExerciseList 
+                    title={title} 
+                    sentence={sentence} 
+                    type={type}
+                    options={options}
+                    setOptions={setOptions}
+                    />
                 </Box>
               }
             </Box>
