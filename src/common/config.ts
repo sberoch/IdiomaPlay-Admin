@@ -1,4 +1,4 @@
 export const consts = {
   minStringLength: 5,
-  maxTitleLength: 20
+  maxTitleLength: 50
 }
