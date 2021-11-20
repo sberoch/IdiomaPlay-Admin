@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrayInput, FormWithRedirect, SelectArrayInput } from "react-admin";
 import { useHistory } from "react-router-dom";
 import api from "../../api/axios";
-import { consts } from "../../common/config";
+import { config } from "../../common/config";
 import Alerts from "../alerts/Alerts";
 
 export const ChallengesCreate = (props: any) => {
@@ -36,7 +36,7 @@ export const ChallengesCreate = (props: any) => {
   };
 
   const inputErrors = () => {
-    const titleOutOfRange = title.length > consts.maxTitleLength || title.length < consts.minStringLength
+    const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
     const unitsIsEmpty = units.length === 0
     const lessUnitsChosenThanAmountOfUnits = unitsChosen.length <= units.length
     const noUnitsChosen = unitsChosen.length === 0; 
@@ -47,13 +47,13 @@ export const ChallengesCreate = (props: any) => {
   const handleSubmit = async () => {
     //Postear al back
     if (!inputErrors()) {
-      const res = await api.post("/challenges", {
+      const res = await api.post(config.challenges, {
         title,
         unitsIds: unitsChosen.map((actual) => +actual),
       });
       console.log(res);
       //Redirect
-      history.push("/challenges");
+      history.push(config.challenges);
     } else {
       setShowError(true);
     }

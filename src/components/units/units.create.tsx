@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrayInput, FormWithRedirect, SelectArrayInput } from "react-admin";
 import { useHistory } from "react-router-dom";
 import api from "../../api/axios";
-import { consts } from "../../common/config";
+import { config } from "../../common/config";
 import Alerts from "../alerts/Alerts";
 
 export const UnitsCreate = (props: any) => {
@@ -16,7 +16,7 @@ export const UnitsCreate = (props: any) => {
 
   useEffect(() => {
     async function fetchLessons() {
-      const response = await api.get("lessons");
+      const response = await api.get(config.lessons);
       setLessons(response.data.items);
       console.log(lessons);
     }
@@ -36,7 +36,7 @@ export const UnitsCreate = (props: any) => {
   };
 
   const inputErrors = () => {
-    const titleOutOfRange = title.length > consts.maxTitleLength || title.length < consts.minStringLength
+    const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
     const lessonsIsEmpty = lessons.length === 0
     const lessLessonsChosenThanAmountOfLessons = lessonsChosen.length <= lessons.length
     const noLessonsChosen = lessonsChosen.length === 0; 
@@ -47,13 +47,13 @@ export const UnitsCreate = (props: any) => {
   const handleSubmit = async () => {
     //Postear al back
     if (!inputErrors()) {
-      const res = await api.post("/units", {
+      const res = await api.post(config.units, {
         title,
         lessonsIds: lessonsChosen.map((actual) => +actual),
       });
       console.log(res);
       //Redirect
-      history.push("/units");
+      history.push(config.units);
     } else {
       setShowError(true);
     }

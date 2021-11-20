@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrayInput, FormWithRedirect, SelectArrayInput } from "react-admin";
 import { useHistory } from "react-router-dom";
 import api from "../../api/axios";
-import { consts } from "../../common/config";
+import { config } from "../../common/config";
 import Alerts from "../alerts/Alerts";
 
 export const LessonsCreate = (props: any) => {
@@ -15,12 +15,12 @@ export const LessonsCreate = (props: any) => {
   let history = useHistory();
 
   useEffect(() => {
-    async function fetchLessons() {
-      const response = await api.get("exercises");
+    async function fetchExercises() {
+      const response = await api.get(config.exercises);
       setExercises(response.data.items);
       console.log(exercises);
     }
-    fetchLessons();
+    fetchExercises();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -36,7 +36,7 @@ export const LessonsCreate = (props: any) => {
   };
 
   const inputErrors = () => {
-    const titleOutOfRange = title.length > consts.maxTitleLength || title.length < consts.minStringLength
+    const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
     const exercisesIsEmpty = exercises.length === 0
     const lessExercisesChosenThanAmountOfExercises = exercisesChosen.length <= exercises.length
     const noExercisesChosen = exercisesChosen.length === 0; 
@@ -47,13 +47,13 @@ export const LessonsCreate = (props: any) => {
   const handleSubmit = async () => {
     //Postear al back
     if (!inputErrors()){
-      const res = await api.post("/lessons", {
+      const res = await api.post(config.lessons, {
         title,
         exercisesIds: exercisesChosen.map((actual) => +actual),
       });
       console.log(res);
       //Redirect
-      history.push("/lessons");
+      history.push(config.lessons);
     } else {
       setShowError(true);
     }

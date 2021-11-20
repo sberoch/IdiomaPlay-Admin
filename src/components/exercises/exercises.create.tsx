@@ -1,5 +1,5 @@
-import { Box, MenuItem, TextField, Typography } from '@material-ui/core';
-import { Select } from "@mui/material";
+import { Box, FormHelperText, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Select, Grid } from "@mui/material";
 import { useState } from "react";
 import {
   FormWithRedirect
@@ -42,67 +42,97 @@ export const ExercisesCreate = (props: any) => {
   const handleTypeChange = (e: any) => {
     setType(e.target.value)
     if (e.target.value === types.complete.text && options.length > types.complete.amount) {
-      setOptions((prev) => prev.slice(0, types.complete.amount))
+      setOptions((prev:any) => prev.slice(0, types.complete.amount))
+    }
+  }
+
+  const getHelpText = () => {
+    switch(type) {
+      case types.complete.text:
+        return "The house * on fire, donde el * indica donde se reemplaza la opción correcta."
+      case types.translate_new_to_old.text:
+        return "Ingrese la oración a ser traducida."
+      case types.translate_old_to_new.text:
+        return "Ingrese la oración a ser traducida."
+      case types.listen.text:
+        return "Ingrese la oración a ser escuchada en la aplicación."
     }
   }
 
   return (
     <FormWithRedirect {...props}
       render={formProps => (
-        // here starts the custom form layout
         <form>
           <Box
             sx={{
               display: 'flex',
               alignItems: 'flex-start',
               flexDirection: 'column',
+              paddingLeft:0,
               p: 1,
-              m: 1,
+              m: 3,
             }}
           >
-            <Typography variant="h6" gutterBottom>Crear ejercicio</Typography>
-            <Box display="flex" sx={{ marginTop:10, p:1}}>
-              <TextField id="filled-basic" label="Title" variant="filled" value={title} onChange={handleTitleChange}/>
-            </Box>
-            <Box display="flex" sx={{ marginTop:10, p:1}}>
-              <TextField id="filled-basic" label="Sentence" variant="filled" value={sentence} onChange={handleSentenceChange}/>
-            </Box>
-
-            <Box display="flex" sx={{ marginTop:10, paddingTop: 30, p:1}}>
-              <Typography variant="h6" gutterBottom>Agregar tipo de ejercicio</Typography>  
-            </Box>
-
-            <Box sx={{ p:1}}>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Tipo de ejercicio"
-                onChange={handleTypeChange}
-                defaultValue="None"
-                value={type}
-                sx={{ marginTop: 1, p:1, width: 200 }}
-              >
-                  {exerciseTypes.map((actualType) => {
-                    return (
-                      <MenuItem key={actualType.id} value={actualType.name}>
-                        {actualType.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              {type &&
-                <Box sx={{ marginTop:20, paddingTop:25}}>
-                  <Typography variant="h6" gutterBottom>Agregar opciones</Typography>
-                  <AddExerciseList 
-                    title={title} 
-                    sentence={sentence} 
-                    type={type}
-                    options={options}
-                    setOptions={setOptions}
-                    />
+            <Grid container spacing={2}>
+              <Grid item xs={5}>
+                <Typography variant="h6" gutterBottom>Crear ejercicio</Typography>
+                <Box display="flex" sx={{ marginTop:20}}>
+                  <TextField id="filled-basic" label="Titulo del ejercicio" variant="filled" value={title} onChange={handleTitleChange}/>
                 </Box>
-              }
-            </Box>
+
+
+                <Box display="flex" sx={{marginTop: 30}}>
+                  <Typography variant="h6" gutterBottom>Agregar tipo de ejercicio</Typography>  
+                </Box>
+              
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Tipo de ejercicio"
+                    onChange={handleTypeChange}
+                    defaultValue="None"
+                    value={type}
+                    sx={{ marginTop: 1, p:1, width: 200 }}
+                  >
+                      {exerciseTypes.map((actualType) => {
+                        return (
+                          <MenuItem key={actualType.id} value={actualType.name}>
+                            {actualType.name}
+                          </MenuItem>
+                        );
+                      })}
+                  </Select>
+
+                <Box display="flex" sx={{ marginTop:50}}>
+                  <Grid id="top-row" container spacing={3}>
+                    <Grid item xs={10}>
+                      <TextField id="filled-basic" label="Oración" variant="filled" value={sentence} onChange={handleSentenceChange}/>
+                    </Grid>
+                    <Grid item xs={10}>
+                      <FormHelperText>{getHelpText()}</FormHelperText>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+
+              <Grid item xs={6}>
+                {type &&
+                  <Box sx={{ m:0, p:0 }}>
+                    <Typography variant="h6" gutterBottom>Agregar opciones</Typography>
+                    <Box display="flex" sx={{ marginTop:0}}>
+                      <AddExerciseList 
+                        title={title} 
+                        sentence={sentence} 
+                        type={type}
+                        options={options}
+                        setOptions={setOptions}
+                        />
+                    </Box>
+
+                  </Box>
+                }
+              </Grid>
+            </Grid>
           </Box>
         </form>
       )}

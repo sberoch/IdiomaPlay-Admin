@@ -17,7 +17,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Alerts from '../alerts/Alerts'
-import { consts } from "../../common/config";
+import { config } from "../../common/config";
 import api from "../../api/axios";
 
 interface Option {
@@ -63,21 +63,23 @@ export default function AddExerciseList(props: Props) {
 
     if (options.length < totalOptions) {
       return (
-        <TextField
-          id="filled-basic"
-          label="Nueva opcion"
-          variant="filled"
-          value={text}
-          onChange={handleTextChange}
-          size="small"
-          InputProps={{
-            endAdornment: (
-              <IconButton onClick={handleNewOption}>
-                <AddIcon />
-              </IconButton>
-            ),
-          }}
-        />
+        <Box display="flex" sx={{ marginTop:-4}}>
+          <TextField
+            id="filled-basic"
+            label="Nueva opcion"
+            variant="filled"
+            value={text}
+            onChange={handleTextChange}
+            size="medium"
+            InputProps={{
+              endAdornment: (
+                <IconButton onClick={handleNewOption}>
+                  <AddIcon />
+                </IconButton>
+              ),
+            }}
+          />
+        </Box>
       );
     }
   };
@@ -88,8 +90,8 @@ export default function AddExerciseList(props: Props) {
 
   const inputErrors = () => {
     const amoutOfOptions = type === types.complete.text ? types.complete.amount : types.listen.amount
-    const titleOutOfRange = title.length > consts.maxTitleLength || title.length < consts.minStringLength
-    const sentenceOutOfRange = sentence.length < consts.minStringLength;
+    const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
+    const sentenceOutOfRange = sentence.length < config.minStringLength;
     const sentenceDoesntContainAsterik = !sentence.includes("*");
     const notEnoughOptions = options.length !== amoutOfOptions
     const correctOptionIsEmpty = correctOption === ""
@@ -103,7 +105,7 @@ export default function AddExerciseList(props: Props) {
   const handleSubmit = async () => {
     //Postear al back
     if (!inputErrors()) {
-      const res = await api.post("/exercises", {
+      const res = await api.post(config.exercises, {
         title,
         sentence,
         type,
@@ -113,7 +115,7 @@ export default function AddExerciseList(props: Props) {
   
       console.log(res);
       //Redirect
-      history.push("/exercises");
+      history.push(config.exercises);
     } else {
       setShowError(true);
     }
@@ -126,7 +128,7 @@ export default function AddExerciseList(props: Props) {
   };
 
   return (
-    <Box sx={{ marginTop: 10 }}>
+    <Box>
       <List sx={{ width: "100%", maxWidth: 360 }}>
         {options.map((option: Option) => {
           const { id, text } = option;
@@ -145,10 +147,11 @@ export default function AddExerciseList(props: Props) {
 
       {getInput()}
 
-      <Box sx={{ m: 5 }} />
-      <Typography variant="h6" gutterBottom>
-        Agregar opción correcta
-      </Typography>
+      <Box sx={{ marginTop: 50 }}>
+        <Typography variant="h6" gutterBottom>
+          Agregar opción correcta
+        </Typography>
+      </Box>
 
       <Select
         labelId="demo-simple-select-label"
@@ -167,26 +170,26 @@ export default function AddExerciseList(props: Props) {
         })}
       </Select>
 
-      <Box sx={{ m: 5 }} />
-
       <Alerts
         showError={showError}
         setShowError={setShowError}
       />
 
-      <Button
-        style={{
-          borderRadius: 35,
-          backgroundColor: "lightBlue",
-          padding: "18px 36px",
-          fontSize: "18px",
-        }}
-        onClick={handleSubmit}
-        variant="contained"
-        startIcon={<SaveIcon />}
-      >
-        Agregar
-      </Button>
+      <Box sx={{ paddingTop: 50}}>
+        <Button
+          style={{
+            borderRadius: 35,
+            backgroundColor: "lightBlue",
+            padding: "18px 36px",
+            fontSize: "18px",
+          }}
+          onClick={handleSubmit}
+          variant="contained"
+          startIcon={<SaveIcon />}
+        >
+          Agregar
+        </Button>
+      </Box>
     </Box>
   );
 }
