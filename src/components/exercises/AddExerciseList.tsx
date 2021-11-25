@@ -53,7 +53,7 @@ export default function AddExerciseList(props: Props) {
 
   const handleNewOption = () => {
     //If options doesn't already exist
-    if (!options.some((actualOption: Option) => actualOption.text === text)){
+    if (!options.some((actualOption: Option) => actualOption.text === text)) {
       setOptions((prev: Option[]) => [...prev, { id: options.length + 1, text: text }]);
     }
   };
@@ -63,7 +63,7 @@ export default function AddExerciseList(props: Props) {
 
     if (options.length < totalOptions) {
       return (
-        <Box display="flex" sx={{ marginTop:-4}}>
+        <Box display="flex" sx={{ marginTop: -4 }}>
           <TextField
             id="filled-basic"
             label="Nueva opcion"
@@ -95,11 +95,11 @@ export default function AddExerciseList(props: Props) {
     const sentenceDoesntContainAsterik = !sentence.includes("*");
     const notEnoughOptions = options.length !== amoutOfOptions
     const correctOptionIsEmpty = correctOption === ""
-    const correctOptionIsInOptions = options.some((actualOption:Option) => actualOption.text === correctOption)
+    const correctOptionIsInOptions = options.some((actualOption: Option) => actualOption.text === correctOption)
 
-    return  titleOutOfRange || sentenceOutOfRange || sentenceDoesntContainAsterik ||
-            notEnoughOptions || correctOptionIsEmpty || 
-            !correctOptionIsInOptions 
+    return titleOutOfRange || sentenceOutOfRange || sentenceDoesntContainAsterik ||
+      notEnoughOptions || correctOptionIsEmpty ||
+      !correctOptionIsInOptions
   }
 
   const handleSubmit = async () => {
@@ -112,7 +112,7 @@ export default function AddExerciseList(props: Props) {
         options: options.map((option: Option) => option.text),
         correctOption,
       });
-  
+
       console.log(res);
       //Redirect
       history.push(config.exercises);
@@ -175,7 +175,7 @@ export default function AddExerciseList(props: Props) {
         setShowError={setShowError}
       />
 
-      <Box sx={{ paddingTop: 50}}>
+      <Box sx={{ paddingTop: 50 }}>
         <Button
           style={{
             borderRadius: 35,

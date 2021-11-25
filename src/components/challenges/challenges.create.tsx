@@ -1,45 +1,26 @@
-import {  FormHelperText, TextField } from '@material-ui/core';
-import { Select, ListItemButton } from "@mui/material";
-import { Button as ButtonCore }from "@material-ui/core";
-import { useHistory } from "react-router-dom";
-import React from 'react';
-import { useState } from "react";
-import {
-  FormWithRedirect
-} from "react-admin";
-
+import { Button as ButtonCore, TextField } from '@material-ui/core';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FolderIcon from '@mui/icons-material/Folder';
+import SaveIcon from "@mui/icons-material/Save";
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from "@mui/icons-material/Save";
-import { UnitsAdd } from '../units/units.add';
+import React, { useState } from 'react';
+import {
+  FormWithRedirect
+} from "react-admin";
+import { useHistory } from "react-router-dom";
 import api from '../../api/axios';
 import { config } from '../../common/config';
 import Alerts from "../alerts/Alerts";
-
-interface Option {
-  id: number;
-  text: string;
-}
-
-function generate(element:any) {
-    return [0, 1, 2].map((value) =>
-      React.cloneElement(element, {
-        key: value,
-      }),
-    );
-}
+import { UnitsAdd } from '../units/units.add';
 
 export const ChallengesCreate = (props: any) => {
   const [showError, setShowError] = useState(false);
@@ -112,7 +93,7 @@ export const ChallengesCreate = (props: any) => {
                         Unidades
                     </Typography>
                     <div>
-                        {units.length < 1 && <Typography style={{fontSize:"13px", marginLeft:"15px"}}>No has creado una unidad aún</Typography>}
+                        {units.length < 1 && <Typography style={{fontSize:"13px", marginLeft:"10px"}}>No has creado una unidad aún</Typography>}
                         {units.length > 0 && <List dense={true}>
                         {units.map((unit:any) => {
                           return(
@@ -145,7 +126,8 @@ export const ChallengesCreate = (props: any) => {
                         backgroundColor: "lightBlue",
                         padding: "18px 36px",
                         fontSize: "18px",
-                        marginTop: "15px",
+                        marginTop: "20px",
+                        marginLeft: "-10px"
                       }}
                       onClick= {handleSubmit}
                       variant="contained"
