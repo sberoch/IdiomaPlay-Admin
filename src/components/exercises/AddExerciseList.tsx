@@ -1,13 +1,10 @@
 import {
-  Box,
-  Button,
-  MenuItem,
+  Box, MenuItem,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@mui/icons-material/Close";
-import SaveIcon from "@mui/icons-material/Save";
 import { Select } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
@@ -15,10 +12,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
-import Alerts from '../alerts/Alerts'
-import { config } from "../../common/config";
-import api from "../../api/axios";
 
 interface Option {
   id: number;
@@ -26,11 +19,11 @@ interface Option {
 }
 
 interface Props {
-  title: string;
-  sentence: string;
   type: string;
   options: any;
   setOptions: any;
+  correctOption: string;
+  setCorrectOption: any;
 }
 
 const types = {
@@ -41,11 +34,8 @@ const types = {
 };
 
 export default function AddExerciseList(props: Props) {
-  const { title, sentence, type, options, setOptions } = props;
+  const { correctOption, setCorrectOption, type, options, setOptions } = props;
   const [text, setText] = useState("");
-  const [correctOption, setCorrectOption] = useState<string>("");
-  const [showError, setShowError] = useState(false)
-  let history = useHistory();
 
   const handleTextChange = (e: any) => {
     setText(e.target.value);
@@ -88,38 +78,6 @@ export default function AddExerciseList(props: Props) {
     setCorrectOption(event.target.value as string);
   };
 
-  const inputErrors = () => {
-    const amoutOfOptions = type === types.complete.text ? types.complete.amount : types.listen.amount
-    const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
-    const sentenceOutOfRange = sentence.length < config.minStringLength;
-    const sentenceDoesntContainAsterik = !sentence.includes("*");
-    const notEnoughOptions = options.length !== amoutOfOptions
-    const correctOptionIsEmpty = correctOption === ""
-    const correctOptionIsInOptions = options.some((actualOption: Option) => actualOption.text === correctOption)
-
-    return titleOutOfRange || sentenceOutOfRange || sentenceDoesntContainAsterik ||
-      notEnoughOptions || correctOptionIsEmpty ||
-      !correctOptionIsInOptions
-  }
-
-  const handleSubmit = async () => {
-    //Postear al back
-    if (!inputErrors()) {
-      const res = await api.post(config.exercises, {
-        title,
-        sentence,
-        type,
-        options: options.map((option: Option) => option.text),
-        correctOption,
-      });
-
-      console.log(res);
-      //Redirect
-      history.push(config.exercises);
-    } else {
-      setShowError(true);
-    }
-  };
 
   const removeOption = (id: number) => {
     setOptions((prev: any) => {
@@ -169,27 +127,6 @@ export default function AddExerciseList(props: Props) {
           );
         })}
       </Select>
-
-      <Alerts
-        showError={showError}
-        setShowError={setShowError}
-      />
-
-      <Box sx={{ paddingTop: 50 }}>
-        <Button
-          style={{
-            borderRadius: 35,
-            backgroundColor: "lightBlue",
-            padding: "18px 36px",
-            fontSize: "18px",
-          }}
-          onClick={handleSubmit}
-          variant="contained"
-          startIcon={<SaveIcon />}
-        >
-          Agregar
-        </Button>
-      </Box>
     </Box>
   );
 }

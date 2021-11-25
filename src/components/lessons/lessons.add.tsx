@@ -2,6 +2,7 @@ import { Button as ButtonCore, TextField } from '@material-ui/core';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FolderIcon from '@mui/icons-material/Folder';
 import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from '@mui/icons-material/Edit'
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -45,6 +46,16 @@ export const LessonsAdd = (props: any) => {
     }
   }
 
+  const removeExercise = (title: string) => {
+    setExercises((prev: any) => {
+      return prev.filter((actualPrevOption: any) => actualPrevOption.title.localeCompare(title) !== 0);
+    });
+  };
+
+  const editExercise = (title: string) => {
+
+  };
+
   return (
     <div>
       {!addingExercise &&
@@ -60,12 +71,26 @@ export const LessonsAdd = (props: any) => {
                 Ejercicios
               </Typography>
               <div>
-                <List dense={true}>
-                  {exercises.map((lesson: any) => {
+                {exercises.length === 0 &&
+                  <Typography style={{
+                    width: 200,
+                    fontSize: "14px",
+                    marginLeft: "0px",
+                    marginTop: 12
+                  }}>
+                    No has creado un ejercicio aún
+                  </Typography>}
+                {exercises.length > 0 && <List dense={true}>
+                  {exercises.map((exercise: any) => {
                     return (
                       <ListItem
+                        sx={{
+                          marginTop: 2,
+                          width: 300,
+                          marginLeft: -2
+                        }}
                         secondaryAction={
-                          <IconButton edge="end" aria-label="delete">
+                          <IconButton edge="end" aria-label="delete" onClick={() => { removeExercise(exercise.title) }}>
                             <DeleteIcon />
                           </IconButton>
                         }
@@ -76,16 +101,21 @@ export const LessonsAdd = (props: any) => {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary="Single-line item"
+                          primary={exercise.title}
                         />
+                        <IconButton onClick={() => { editExercise(exercise.title) }}>
+                          <EditIcon />
+                        </IconButton>
                       </ListItem>
                     );
                   })}
                 </List>
+                }
               </div>
 
               <Button
                 style={{
+                  marginTop: "10px",
                   marginLeft: "-10px"
                 }}
                 onClick={() => { setAddingExercise(true) }}

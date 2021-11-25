@@ -1,10 +1,11 @@
-import { FormHelperText, MenuItem, TextField } from '@material-ui/core';
+import { Button as ButtonCore, FormHelperText, MenuItem, TextField } from '@material-ui/core';
 import { Select } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { useState } from "react";
-// import { config } from '../../common/config';
+import SaveIcon from "@mui/icons-material/Save";
+import { config } from '../../common/config';
 import Alerts from '../alerts/Alerts';
 import AddExerciseList from './AddExerciseList';
 
@@ -30,9 +31,10 @@ interface Option {
 export const ExercisesAdd = (props: any) => {
   const [showError, setShowError] = useState(false);
   const [title, setTitle] = useState("");
-  const [options, setOptions] = useState<Option[]>([]);
   const [sentence, setSentence] = useState("");
   const [type, setType] = useState("")
+  const [options, setOptions] = useState<Option[]>([]);
+  const [correctOption, setCorrectOption] = useState<string>("");
 
   const handleTitleChange = (e: any) => {
     setTitle(e.target.value)
@@ -49,18 +51,27 @@ export const ExercisesAdd = (props: any) => {
     }
   }
 
-  // const inputErrors = () => {
-  //   const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
-  //   return titleOutOfRange
-  // }
+  const inputErrors = () => {
+    const amoutOfOptions = type === types.complete.text ? types.complete.amount : types.listen.amount
+    const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
+    const sentenceOutOfRange = sentence.length < config.minStringLength;
+    const sentenceDoesntContainAsterik = !sentence.includes("*");
+    const notEnoughOptions = options.length !== amoutOfOptions
+    const correctOptionIsEmpty = correctOption === ""
+    const correctOptionIsInOptions = options.some((actualOption: Option) => actualOption.text === correctOption)
 
-  // const sendExercise = () => {
-  //   if (!inputErrors()) {
-  //     props.handleSubmit({ "title": title });
-  //   } else {
-  //     setShowError(true)
-  //   }
-  // }
+    return titleOutOfRange || sentenceOutOfRange || sentenceDoesntContainAsterik ||
+      notEnoughOptions || correctOptionIsEmpty ||
+      !correctOptionIsInOptions
+  }
+  
+  const sendExercise = () => {
+    if (!inputErrors()) {
+      props.handleSubmit({ title, sentence, type, options, correctOption })
+    } else {
+      setShowError(true)
+    }
+  }
 
   const getHelpText = () => {
     switch (type) {
@@ -75,83 +86,93 @@ export const ExercisesAdd = (props: any) => {
     }
   }
 
+  const getLength = () => {
+    return type ? 6 : 12;
+  }
+
   return (
     <form>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          flexDirection: 'column',
-          paddingLeft: 0,
-          p: 0,
-          m: 0,
-        }}
-      >
-        <Grid container spacing={6}>
-          <Grid item xs={6}>
-            <Typography variant="h6" gutterBottom>Crear ejercicio</Typography>
-            <Box display="flex" sx={{ marginTop: 4 }}>
-              <TextField id="filled-basic" label="Titulo del ejercicio" variant="filled" value={title} onChange={handleTitleChange} />
-            </Box>
+      <Grid container spacing={6}>
+        <Grid item xs={getLength()}>
+          <Typography variant="h6" gutterBottom>Crear ejercicio</Typography>
+          <Box sx={{ marginTop: 4 }}>
+            <TextField id="filled-basic" label="Titulo del ejercicio" variant="filled" value={title} onChange={handleTitleChange} />
+          </Box>
 
 
-            <Box display="flex" sx={{ marginTop: 4 }}>
-              <Typography variant="h6" gutterBottom>Agregar tipo de ejercicio</Typography>
-            </Box>
+          <Box sx={{ marginTop: 4 }}>
+            <Typography variant="h6" gutterBottom>Agregar tipo de ejercicio</Typography>
+          </Box>
 
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Tipo de ejercicio"
-              onChange={handleTypeChange}
-              defaultValue="None"
-              value={type}
-              sx={{ marginTop: 1, p: 1, width: 200 }}
-            >
-              {exerciseTypes.map((actualType) => {
-                return (
-                  <MenuItem key={actualType.id} value={actualType.name}>
-                    {actualType.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Tipo de ejercicio"
+            onChange={handleTypeChange}
+            defaultValue="None"
+            value={type}
+            sx={{ marginTop: 1, p: 1, width: 200 }}
+          >
+            {exerciseTypes.map((actualType) => {
+              return (
+                <MenuItem key={actualType.id} value={actualType.name}>
+                  {actualType.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
 
-            <Box display="flex" sx={{ marginTop: 6 }}>
-              <Typography variant="h6" gutterBottom>Agregar oración</Typography>
-            </Box>
+          <Box sx={{ marginTop: 6 }}>
+            <Typography variant="h6" gutterBottom>Agregar oración</Typography>
+          </Box>
 
-            <Box display="flex" sx={{ marginTop: 2 }}>
-              <Grid id="top-row" container spacing={3}>
-                <Grid item xs={10}>
-                  <TextField id="filled-basic" label="Oración" variant="filled" value={sentence} onChange={handleSentenceChange} />
-                </Grid>
-                <Grid item xs={10}>
-                  <FormHelperText>{getHelpText()}</FormHelperText>
-                </Grid>
+          <Box sx={{ marginTop: 2 }}>
+            <Grid id="top-row" container spacing={3}>
+              <Grid item xs={10}>
+                <TextField id="filled-basic" label="Oración" variant="filled" value={sentence} onChange={handleSentenceChange} />
               </Grid>
-            </Box>
-          </Grid>
-
-          <Grid item xs={6}>
-            {type &&
-              <Box sx={{ m: 0, p: 0 }}>
-                <Typography variant="h6" gutterBottom>Agregar opciones</Typography>
-                <Box display="flex" sx={{ marginTop: 0 }}>
-                  <AddExerciseList
-                    title={title}
-                    sentence={sentence}
-                    type={type}
-                    options={options}
-                    setOptions={setOptions}
-                  />
-                </Box>
-
-              </Box>
-            }
-          </Grid>
+              <Grid item xs={10}>
+                <FormHelperText>{getHelpText()}</FormHelperText>
+              </Grid>
+            </Grid>
+          </Box>
         </Grid>
-      </Box>
+
+        <Grid item xs={6}>
+          {type &&
+            <Box sx={{ m: 0, p: 0 }}>
+              <Typography variant="h6" gutterBottom>Agregar opciones</Typography>
+              <Box sx={{ marginTop: 0 }}>
+                <AddExerciseList
+                  type={type}
+                  options={options}
+                  setOptions={setOptions}
+                  correctOption={correctOption}
+                  setCorrectOption={setCorrectOption}
+                />
+              </Box>
+
+              <ButtonCore
+                style={{
+                  borderRadius: 35,
+                  backgroundColor: "lightBlue",
+                  padding: "18px 36px",
+                  fontSize: "18px",
+                  marginTop: "80px",
+                  marginLeft: "-5px"
+                }}
+                onClick={() => { sendExercise() }}
+                variant="contained"
+                startIcon={<SaveIcon />}
+              >
+                Agregar
+              </ButtonCore>
+
+            </Box>
+          }
+        </Grid>
+      </Grid>
+
       <Alerts
         showError={showError}
         setShowError={setShowError}

@@ -1,6 +1,7 @@
 import { Button as ButtonCore, TextField } from '@material-ui/core';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FolderIcon from '@mui/icons-material/Folder';
+import EditIcon from '@mui/icons-material/Edit'
 import SaveIcon from "@mui/icons-material/Save";
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -28,7 +29,7 @@ export const ChallengesCreate = (props: any) => {
   const [units, setUnits] = useState<any[]>([]);
   const [addingUnit, setAddingUnit] = useState(false);
   let history = useHistory();
-  
+
   const handleTitleChange = (e: any) => {
     setTitle(e.target.value)
   }
@@ -52,20 +53,20 @@ export const ChallengesCreate = (props: any) => {
     setAddingUnit(false);
   }
 
-    const handleSubmit = async () => {
+  const handleSubmit = async () => {
     //Postear al back
-      if (!inputErrors()) {
-        const res = await api.post(config.challenges, {
-          "title": title,
-          "units": units
-        });
-        console.log(res);
-        //Redirect
-        history.push(config.challenges);
-      } else {
-        setShowError(true)
-      }
-    };
+    if (!inputErrors()) {
+      const res = await api.post(config.challenges, {
+        "title": title,
+        "units": units
+      });
+      console.log(res);
+      //Redirect
+      history.push(config.challenges);
+    } else {
+      setShowError(true)
+    }
+  };
 
   return (
     <FormWithRedirect {...props}
@@ -76,7 +77,7 @@ export const ChallengesCreate = (props: any) => {
               display: 'flex',
               alignItems: 'flex-start',
               flexDirection: 'column',
-              paddingLeft:0,
+              paddingLeft: 0,
               p: 1,
               m: 3,
             }}
@@ -84,62 +85,89 @@ export const ChallengesCreate = (props: any) => {
             {!addingUnit && <Grid container spacing={2}>
               <Grid item xs={5}>
                 <Typography variant="h5" gutterBottom>Crear un nuevo desafío</Typography>
-                <Box display="flex" sx={{ marginTop:5}}>
-                  <TextField id="filled-basic" label="Titulo del desafío" variant="filled" value={title} onChange={handleTitleChange}/>
+                <Box display="flex" sx={{ marginTop: 5 }}>
+                  <TextField id="filled-basic" label="Titulo del desafío" variant="filled" value={title} onChange={handleTitleChange} />
                 </Box>
 
                 <Grid item xs={12} md={6}>
-                    <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-                        Unidades
-                    </Typography>
-                    <div>
-                        {units.length < 1 && <Typography style={{fontSize:"13px", marginLeft:"10px"}}>No has creado una unidad aún</Typography>}
-                        {units.length > 0 && <List dense={true}>
-                        {units.map((unit:any) => {
-                          return(
-                            <ListItem
+                  <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+                    Unidades
+                  </Typography>
+                  <div>
+                    {units.length < 1 &&
+                      <Typography
+                        style={{
+                          width: 200,
+                          fontSize: "14px",
+                          marginLeft: "0px",
+                          marginTop: 12
+                        }}>
+                        No has creado una unidad aún
+                      </Typography>
+                    }
+                    {units.length > 0 && <List dense={true}>
+                      {units.map((unit: any) => {
+                        return (
+                          <ListItem
+                            sx={{
+                              marginTop: 2,
+                              width: 300,
+                              marginLeft: -2
+                            }}
                             secondaryAction={
-                                <IconButton edge="end" aria-label="delete" onClick={()=>{removeOption(unit.title)}}>
-                                  <DeleteIcon />
-                                </IconButton>
+                              <IconButton edge="end" aria-label="delete" onClick={() => { removeOption(unit.title) }}>
+                                <DeleteIcon />
+                              </IconButton>
                             }
-                            >
+                          >
                             <ListItemAvatar>
-                                <Avatar>
-                                  <FolderIcon />
-                                </Avatar>
+                              <Avatar>
+                                <FolderIcon />
+                              </Avatar>
                             </ListItemAvatar>
                             <ListItemText
-                                primary={unit.title}
+                              primary={unit.title}
                             />
-                            </ListItem>
-                          );
-                        })}
-                        </List>}
-                    </div>
+                            <IconButton onClick={() => { console.log("implementame rata") }}>
+                              <EditIcon />
+                            </IconButton>
 
-                    <Button onClick={()=>setAddingUnit(true)}>Crear unidad</Button>
+                          </ListItem>
+                        );
+                      })}
+                    </List>}
+                  </div>
 
-                    <ButtonCore
-                      style={{
-                        borderRadius: 35,
-                        backgroundColor: "lightBlue",
-                        padding: "18px 36px",
-                        fontSize: "18px",
-                        marginTop: "20px",
-                        marginLeft: "-10px"
-                      }}
-                      onClick= {handleSubmit}
-                      variant="contained"
-                      startIcon={<SaveIcon />}
-                    >
-                      Agregar
-                    </ButtonCore>
+                  <Button
+                    style={{
+                      marginTop: "10px",
+                      marginLeft: "-8px"
+                    }}
+                    onClick={() => { setAddingUnit(true) }}
+                  >
+                    Crear unidad
+                  </Button>
+
+                  <ButtonCore
+                    style={{
+                      borderRadius: 35,
+                      backgroundColor: "lightBlue",
+                      padding: "18px 36px",
+                      fontSize: "18px",
+                      marginTop: "20px",
+                      marginLeft: "-10px"
+                    }}
+                    onClick={handleSubmit}
+                    variant="contained"
+                    startIcon={<SaveIcon />}
+                  >
+                    Agregar
+                  </ButtonCore>
                 </Grid>
               </Grid>
             </Grid>}
-            {addingUnit && 
-              <UnitsAdd handleSubmit={(unitCreated: any)=> {handleAddUnit(unitCreated)}}/>
+            {addingUnit &&
+              <UnitsAdd handleSubmit={(unitCreated: any) => { handleAddUnit(unitCreated) }} />
             }
           </Box>
           <Alerts

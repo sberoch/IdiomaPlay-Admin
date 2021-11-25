@@ -3,6 +3,7 @@ import { Button as ButtonCore } from "@material-ui/core";
 import { useState } from "react";
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
+import EditIcon from '@mui/icons-material/Edit'
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
@@ -69,11 +70,26 @@ export const UnitsAdd = (props: any) => {
               Lecciones
             </Typography>
             <div>
-              {lessons.length < 1 && <Typography style={{ fontSize: "14px", marginLeft: "3px" }}>No has creado una lección aún</Typography>}
+              {lessons.length === 0 &&
+                <Typography
+                  style={{
+                    width: 200,
+                    fontSize: "14px",
+                    marginLeft: "0px",
+                    marginTop: 12
+                  }}>
+                  No has creado una lección aún
+                </Typography>
+              }
               {lessons.length > 0 && <List dense={true}>
                 {lessons.map((lesson: any) => {
                   return (
                     <ListItem
+                      sx={{
+                        marginTop: 2,
+                        width: 300,
+                        marginLeft: -2
+                      }}
                       secondaryAction={
                         <IconButton edge="end" aria-label="delete" onClick={() => { removeOption(lesson.title) }}>
                           <DeleteIcon />
@@ -88,13 +104,24 @@ export const UnitsAdd = (props: any) => {
                       <ListItemText
                         primary={lesson.title}
                       />
+                      <IconButton onClick={() => { console.log("implementame rata") }}>
+                        <EditIcon />
+                      </IconButton>
                     </ListItem>
                   );
                 })}
               </List>}
             </div>
 
-            <Button onClick={() => setAddingLesson(true)}>Crear lección</Button>
+            <Button
+                style={{
+                  marginTop: "10px",
+                  marginLeft: "-10px"
+                }}
+                onClick={() => { setAddingLesson(true) }}
+              >
+                Crear lección
+              </Button>
 
             <ButtonCore
               style={{
