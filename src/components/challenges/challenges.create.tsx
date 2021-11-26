@@ -79,9 +79,22 @@ export const ChallengesCreate = (props: any) => {
     setActualUnit(null)
   }
 
+  const removeLocalIds = () => {
+    for (let unit of units) {
+      delete unit.id;
+      for (let lesson of unit.lessons) {
+        delete lesson.id;
+        for (let exercise of lesson.exercises) {
+          delete exercise.id;
+        }
+      }
+    }
+  }
+
   const handleSubmit = async () => {
     //Postear al back
     if (!inputErrors()) {
+      removeLocalIds();
       const res = await api.post(config.challenges, {
         "title": title,
         "units": units
