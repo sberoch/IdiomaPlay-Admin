@@ -53,7 +53,7 @@ export const UnitsCreate = (props: any) => {
       });
       console.log(res);
       //Redirect
-      history.push(config.units);
+      history.push("/units");
     } else {
       setShowError(true);
     }

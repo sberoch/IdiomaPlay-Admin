@@ -13,29 +13,71 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { config } from '../../common/config';
 import Alerts from "../alerts/Alerts";
 import { ExercisesAdd } from '../exercises/exercises.add';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export const LessonsAdd = (props: any) => {
+  const { lesson } = props;
   const [showError, setShowError] = useState(false);
   const [title, setTitle] = useState("");
   const [exercises, setExercises] = useState<Array<any>>([]);
+  const [actualExercise, setActualExercise] = useState<any>(null)
   const [addingExercise, setAddingExercise] = useState(false);
+
+  useEffect(() => {
+    console.log(lesson);
+    if (lesson) {
+      setTitle((prev) => lesson.title);
+      setExercises((prev) => lesson.exercises);
+    }
+  }, [lesson])
 
   const handleTitleChange = (e: any) => {
     setTitle(e.target.value)
   }
 
+  const getNewIdForExercise = (array: any) => {
+    if (array.length > 0) {
+      const lastExercise = array[array.length - 1];
+      return lastExercise.id + 1;
+    } else {
+      return array.length;
+    }
+  }
+
   const handleAddExercise = (exercise: any) => {
-    setExercises((prev: any) => [...prev, exercise]);
+    if (actualExercise) {
+      setExercises((prev: any) => {
+        for (let i = 0; i < prev.length; i++) {
+          if (prev[i].id === actualExercise.id) {
+            exercise.id = actualExercise.id;
+            prev[i] = exercise;
+          }
+        }
+
+        return prev;
+      })
+    } else {
+      setExercises((prev: any) => {
+        exercise.id = getNewIdForExercise(prev);
+        return [...prev, exercise]
+      })
+    }
+    //Go back to lessons screen
     setAddingExercise(false);
+    //Go back to creation mode if you were editing an exercise
+    setActualExercise(null)
   }
 
   const inputErrors = () => {
     const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
-    return titleOutOfRange
+    //TODO: Descomentar 
+    //const notEightExercises = exercises.length !== 8;
+    return titleOutOfRange 
+    //|| notEightExercises;
   }
 
   const sendLesson = () => {
@@ -52,99 +94,127 @@ export const LessonsAdd = (props: any) => {
     });
   };
 
-  const editExercise = (title: string) => {
-
-  };
-
   return (
     <div>
       {!addingExercise &&
-        <Grid container spacing={2}>
+        <Grid container spacing={4}>
           <Grid item xs={12}>
-            <Typography variant="h5" gutterBottom>Crear nueva lección</Typography>
-            <Box display="flex" sx={{ marginTop: 4 }}>
-              <TextField id="filled-basic" label="Titulo de la lección" variant="filled" value={title} onChange={handleTitleChange} />
-            </Box>
+            <IconButton
+              style={{
+                marginLeft: -40,
+                marginTop: -40,
+                marginBottom: -10
+              }}
+              onClick={() => { props.setAddingLesson(false) }}>
+              <ArrowBackIcon />
+            </IconButton>
 
-            <Grid item xs={12} md={6}>
-              <Typography sx={{ mt: 4, mb: 0 }} variant="h6" component="div">
-                Ejercicios
+            <Box sx={{
+              marginLeft: 4
+            }}>
+              <Typography
+                style={{
+                  marginTop: -38,
+                }}
+                variant="h6"
+                gutterBottom>
+                Crear nueva lección
               </Typography>
-              <div>
-                {exercises.length === 0 &&
-                  <Typography style={{
-                    width: 200,
-                    fontSize: "14px",
-                    marginLeft: "0px",
-                    marginTop: 12
-                  }}>
-                    No has creado un ejercicio aún
-                  </Typography>}
-                {exercises.length > 0 && <List dense={true}>
-                  {exercises.map((exercise: any) => {
-                    return (
-                      <ListItem
-                        sx={{
-                          marginTop: 2,
-                          width: 300,
-                          marginLeft: -2
-                        }}
-                        secondaryAction={
-                          <IconButton edge="end" aria-label="delete" onClick={() => { removeExercise(exercise.title) }}>
-                            <DeleteIcon />
+              <Box display="flex" sx={{ marginTop: 3 }}>
+                <TextField id="filled-basic" label="Titulo de la lección" variant="filled" value={title} onChange={handleTitleChange} />
+              </Box>
+
+              <Grid item xs={12} md={6}>
+                <Typography sx={{ mt: 4, mb: 0 }} variant="h6" component="div">
+                  Ejercicios
+                </Typography>
+                <div>
+                  {exercises.length === 0 &&
+                    <Typography style={{
+                      width: 200,
+                      fontSize: "14px",
+                      marginLeft: "0px",
+                      marginTop: 12
+                    }}>
+                      No has creado un ejercicio aún
+                    </Typography>}
+                  {exercises.length > 0 && <List dense={true}>
+                    {exercises.map((exercise: any) => {
+                      return (
+                        <ListItem
+                          key={exercise.id}
+                          sx={{
+                            marginTop: 2,
+                            width: 300,
+                            marginLeft: -2
+                          }}
+                          secondaryAction={
+                            <IconButton edge="end" aria-label="delete" onClick={() => { removeExercise(exercise.title) }}>
+                              <DeleteIcon />
+                            </IconButton>
+                          }
+                        >
+                          <ListItemAvatar>
+                            <Avatar>
+                              <FolderIcon />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={exercise.title}
+                          />
+                          <IconButton onClick={() => {
+                            setActualExercise(exercise);
+                            setAddingExercise(true);
+                          }}>
+                            <EditIcon />
                           </IconButton>
-                        }
-                      >
-                        <ListItemAvatar>
-                          <Avatar>
-                            <FolderIcon />
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={exercise.title}
-                        />
-                        <IconButton onClick={() => { editExercise(exercise.title) }}>
-                          <EditIcon />
-                        </IconButton>
-                      </ListItem>
-                    );
-                  })}
-                </List>
-                }
-              </div>
+                        </ListItem>
+                      );
+                    })}
+                  </List>
+                  }
+                </div>
 
-              <Button
-                style={{
-                  marginTop: "10px",
-                  marginLeft: "-10px"
-                }}
-                onClick={() => { setAddingExercise(true) }}
-              >
-                Crear ejercicio
-              </Button>
+                <Button
+                  style={{
+                    marginTop: "10px",
+                    marginLeft: "-10px"
+                  }}
+                  onClick={() => {
+                    setActualExercise(null);
+                    setAddingExercise(true);
+                  }}
+                >
+                  Crear ejercicio
+                </Button>
 
-              <ButtonCore
-                style={{
-                  borderRadius: 35,
-                  backgroundColor: "lightBlue",
-                  padding: "18px 36px",
-                  fontSize: "18px",
-                  marginTop: "20px",
-                  marginLeft: "-10px"
-                }}
-                onClick={() => { sendLesson() }}
-                variant="contained"
-                startIcon={<SaveIcon />}
-              >
-                Agregar
-              </ButtonCore>
+                <ButtonCore
+                  style={{
+                    borderRadius: 35,
+                    backgroundColor: "lightBlue",
+                    padding: "18px 36px",
+                    fontSize: "18px",
+                    marginTop: "20px",
+                    marginLeft: "-10px"
+                  }}
+                  onClick={() => { sendLesson() }}
+                  variant="contained"
+                  startIcon={<SaveIcon />}
+                >
+                  Agregar
+                </ButtonCore>
 
-            </Grid>
+              </Grid>
+            </Box>
           </Grid>
         </Grid>
       }
       {addingExercise &&
-        <ExercisesAdd handleSubmit={(exerciseCreated: any) => { handleAddExercise(exerciseCreated) }} />
+        <ExercisesAdd
+          exercise={actualExercise}
+          handleSubmit={(exerciseCreated: any) => { handleAddExercise(exerciseCreated) }}
+          setAddingExercise={setAddingExercise}
+        />
       }
 
       <Alerts

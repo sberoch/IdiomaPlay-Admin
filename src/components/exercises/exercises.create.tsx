@@ -83,7 +83,7 @@ export const ExercisesCreate = (props: any) => {
 
       console.log(res);
       //Redirect
-      history.push(config.exercises);
+      history.push("/exercises");
     } else {
       setShowError(true);
     }

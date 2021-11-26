@@ -28,7 +28,17 @@ export const ChallengesCreate = (props: any) => {
   const [title, setTitle] = useState("");
   const [units, setUnits] = useState<any[]>([]);
   const [addingUnit, setAddingUnit] = useState(false);
+  const [actualUnit, setActualUnit] = useState<any>(null);
   let history = useHistory();
+
+  const getNewIdForUnit = (array: any) => {
+    if (array.length > 0) {
+      const lastUnit = array[array.length - 1];
+      return lastUnit.id + 1;
+    } else {
+      return array.length;
+    }
+  }
 
   const handleTitleChange = (e: any) => {
     setTitle(e.target.value)
@@ -46,11 +56,27 @@ export const ChallengesCreate = (props: any) => {
   }
 
   const handleAddUnit = (unit: any) => {
-    console.log(unit)
-    let currentUnits = units;
-    currentUnits.push(unit);
-    setUnits(currentUnits);
+    if (actualUnit) {
+      setUnits((prev: any) => {
+        for (let i = 0; i < prev.length; i++) {
+          if (prev[i].id === actualUnit.id) {
+            unit.id = actualUnit.id;
+            prev[i] = unit;
+          }
+        }
+
+        return prev;
+      })
+    } else {
+      setUnits((prev: any) => {
+        unit.id = getNewIdForUnit(prev);
+        return [...prev, unit]
+      })
+    }
+    //Go back to units screen
     setAddingUnit(false);
+    //Go back to creation mode if you were editing a lesson
+    setActualUnit(null)
   }
 
   const handleSubmit = async () => {
@@ -62,7 +88,7 @@ export const ChallengesCreate = (props: any) => {
       });
       console.log(res);
       //Redirect
-      history.push(config.challenges);
+      history.push("/challenges");
     } else {
       setShowError(true)
     }
@@ -84,7 +110,12 @@ export const ChallengesCreate = (props: any) => {
           >
             {!addingUnit && <Grid container spacing={2}>
               <Grid item xs={5}>
-                <Typography variant="h5" gutterBottom>Crear un nuevo desafío</Typography>
+                <Typography
+                  style={{ marginTop: -10 }}
+                  variant="h5"
+                  gutterBottom>
+                  Crear un nuevo desafío
+                </Typography>
                 <Box display="flex" sx={{ marginTop: 5 }}>
                   <TextField id="filled-basic" label="Titulo del desafío" variant="filled" value={title} onChange={handleTitleChange} />
                 </Box>
@@ -109,6 +140,7 @@ export const ChallengesCreate = (props: any) => {
                       {units.map((unit: any) => {
                         return (
                           <ListItem
+                            key={unit.id}
                             sx={{
                               marginTop: 2,
                               width: 300,
@@ -128,7 +160,10 @@ export const ChallengesCreate = (props: any) => {
                             <ListItemText
                               primary={unit.title}
                             />
-                            <IconButton onClick={() => { console.log("implementame rata") }}>
+                            <IconButton onClick={() => {
+                              setActualUnit(unit);
+                              setAddingUnit(true);
+                            }}>
                               <EditIcon />
                             </IconButton>
 
@@ -143,7 +178,10 @@ export const ChallengesCreate = (props: any) => {
                       marginTop: "10px",
                       marginLeft: "-8px"
                     }}
-                    onClick={() => { setAddingUnit(true) }}
+                    onClick={() => { 
+                      setActualUnit(null);
+                      setAddingUnit(true)
+                    }}
                   >
                     Crear unidad
                   </Button>
@@ -167,7 +205,10 @@ export const ChallengesCreate = (props: any) => {
               </Grid>
             </Grid>}
             {addingUnit &&
-              <UnitsAdd handleSubmit={(unitCreated: any) => { handleAddUnit(unitCreated) }} />
+              <UnitsAdd
+                unit={actualUnit}
+                setAddingUnit={setAddingUnit}
+                handleSubmit={(unitCreated: any) => { handleAddUnit(unitCreated) }} />
             }
           </Box>
           <Alerts

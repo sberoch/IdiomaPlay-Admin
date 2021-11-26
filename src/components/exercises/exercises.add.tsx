@@ -1,13 +1,14 @@
-import { Button as ButtonCore, FormHelperText, MenuItem, TextField } from '@material-ui/core';
+import { Button as ButtonCore, Container, FormHelperText, IconButton, MenuItem, TextField } from '@material-ui/core';
 import { Select } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SaveIcon from "@mui/icons-material/Save";
 import { config } from '../../common/config';
 import Alerts from '../alerts/Alerts';
 import AddExerciseList from './AddExerciseList';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const exerciseTypes = [
   { id: "complete", name: "complete" },
@@ -29,12 +30,23 @@ interface Option {
 }
 
 export const ExercisesAdd = (props: any) => {
+  const { exercise } = props;
   const [showError, setShowError] = useState(false);
   const [title, setTitle] = useState("");
   const [sentence, setSentence] = useState("");
   const [type, setType] = useState("")
   const [options, setOptions] = useState<Option[]>([]);
   const [correctOption, setCorrectOption] = useState<string>("");
+
+  useEffect(() => {
+    if (exercise) {
+      setTitle((prev) => exercise.title);
+      setSentence((prev) => exercise.sentence);
+      setType((prev) => exercise.type);
+      setOptions((prev) => exercise.options);
+      setCorrectOption((prev) => exercise.correctOption);
+    }
+  }, [exercise])
 
   const handleTitleChange = (e: any) => {
     setTitle(e.target.value)
@@ -55,7 +67,7 @@ export const ExercisesAdd = (props: any) => {
     const amoutOfOptions = type === types.complete.text ? types.complete.amount : types.listen.amount
     const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
     const sentenceOutOfRange = sentence.length < config.minStringLength;
-    const sentenceDoesntContainAsterik = !sentence.includes("*");
+    const sentenceDoesntContainAsterik = type === types.complete.text && !sentence.includes("*");
     const notEnoughOptions = options.length !== amoutOfOptions
     const correctOptionIsEmpty = correctOption === ""
     const correctOptionIsInOptions = options.some((actualOption: Option) => actualOption.text === correctOption)
@@ -64,7 +76,7 @@ export const ExercisesAdd = (props: any) => {
       notEnoughOptions || correctOptionIsEmpty ||
       !correctOptionIsInOptions
   }
-  
+
   const sendExercise = () => {
     if (!inputErrors()) {
       props.handleSubmit({ title, sentence, type, options, correctOption })
@@ -91,11 +103,27 @@ export const ExercisesAdd = (props: any) => {
   }
 
   return (
-    <form>
-      <Grid container spacing={6}>
+    <Container>
+      <Grid container spacing={4}>
         <Grid item xs={getLength()}>
-          <Typography variant="h6" gutterBottom>Crear ejercicio</Typography>
-          <Box sx={{ marginTop: 4 }}>
+          <IconButton
+            style={{
+              marginLeft: -70,
+              marginTop: -40,
+              marginBottom: -10
+            }}
+            onClick={() => { props.setAddingExercise(false) }}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography
+            style={{
+              marginTop: -38
+            }}
+            variant="h6"
+            gutterBottom>
+            Crear ejercicio
+          </Typography>
+          <Box sx={{ marginTop: 3 }}>
             <TextField id="filled-basic" label="Titulo del ejercicio" variant="filled" value={title} onChange={handleTitleChange} />
           </Box>
 
@@ -140,7 +168,9 @@ export const ExercisesAdd = (props: any) => {
 
         <Grid item xs={6}>
           {type &&
-            <Box sx={{ m: 0, p: 0 }}>
+            <Box sx={{
+              marginTop: -2,
+            }}>
               <Typography variant="h6" gutterBottom>Agregar opciones</Typography>
               <Box sx={{ marginTop: 0 }}>
                 <AddExerciseList
@@ -158,7 +188,7 @@ export const ExercisesAdd = (props: any) => {
                   backgroundColor: "lightBlue",
                   padding: "18px 36px",
                   fontSize: "18px",
-                  marginTop: "80px",
+                  marginTop: "60px",
                   marginLeft: "-5px"
                 }}
                 onClick={() => { sendExercise() }}
@@ -177,6 +207,6 @@ export const ExercisesAdd = (props: any) => {
         showError={showError}
         setShowError={setShowError}
       />
-    </form>
+    </Container>
   )
 }

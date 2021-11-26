@@ -53,7 +53,7 @@ export const LessonsCreate = (props: any) => {
       });
       console.log(res);
       //Redirect
-      history.push(config.lessons);
+      history.push("/lessons");
     } else {
       setShowError(true);
     }

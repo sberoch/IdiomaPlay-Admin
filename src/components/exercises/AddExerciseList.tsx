@@ -91,7 +91,7 @@ export default function AddExerciseList(props: Props) {
         {options.map((option: Option) => {
           const { id, text } = option;
           return (
-            <ListItem key={id} sx={{ m: 0 }} divider={true}>
+            <ListItem key={id} sx={{ marginTop: 0 }} divider={true}>
               <ListItemButton>
                 <ListItemText primary={text} />
               </ListItemButton>
@@ -105,7 +105,7 @@ export default function AddExerciseList(props: Props) {
 
       {getInput()}
 
-      <Box sx={{ marginTop: 50 }}>
+      <Box sx={{ marginTop: 30 }}>
         <Typography variant="h6" gutterBottom>
           Agregar opción correcta
         </Typography>
