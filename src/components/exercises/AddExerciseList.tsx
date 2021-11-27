@@ -1,16 +1,12 @@
-import {
-  Box, MenuItem,
-  TextField,
-  Typography
-} from "@material-ui/core";
+import { Box, MenuItem, TextField } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import { Select } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import Typography from "@mui/material/Typography";
 import { useState } from "react";
 
 interface Option {
@@ -44,12 +40,19 @@ export default function AddExerciseList(props: Props) {
   const handleNewOption = () => {
     //If options doesn't already exist
     if (!options.some((actualOption: Option) => actualOption.text === text)) {
-      setOptions((prev: Option[]) => [...prev, { id: options.length + 1, text: text }]);
+      setOptions((prev: Option[]) => [
+        ...prev,
+        { id: options.length + 1, text: text },
+      ]);
+      setText("");
     }
   };
 
   const getInput = () => {
-    const totalOptions = type === types.complete.text ? types.complete.amount : types.listen.amount;
+    const totalOptions =
+      type === types.complete.text
+        ? types.complete.amount
+        : types.listen.amount;
 
     if (options.length < totalOptions) {
       return (
@@ -57,7 +60,7 @@ export default function AddExerciseList(props: Props) {
           <TextField
             id="filled-basic"
             label="Nueva opcion"
-            variant="filled"
+            variant="outlined"
             value={text}
             onChange={handleTextChange}
             size="medium"
@@ -78,7 +81,6 @@ export default function AddExerciseList(props: Props) {
     setCorrectOption(event.target.value as string);
   };
 
-
   const removeOption = (id: number) => {
     setOptions((prev: any) => {
       return prev.filter((actualPrevOption: any) => actualPrevOption.id !== id);
@@ -92,9 +94,7 @@ export default function AddExerciseList(props: Props) {
           const { id, text } = option;
           return (
             <ListItem key={id} sx={{ marginTop: 0 }} divider={true}>
-              <ListItemButton>
-                <ListItemText primary={text} />
-              </ListItemButton>
+              <ListItemText primary={text} />
               <IconButton onClick={() => removeOption(id)}>
                 <CloseIcon />
               </IconButton>
@@ -106,18 +106,15 @@ export default function AddExerciseList(props: Props) {
       {getInput()}
 
       <Box sx={{ marginTop: 30 }}>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" fontSize="11pt" gutterBottom>
           Agregar opción correcta
         </Typography>
       </Box>
 
       <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        label="Opcion correcta"
         onChange={handleCorrectOptionChange}
         value={correctOption}
-        sx={{ marginTop: 1, p: 1, width: 200 }}
+        sx={{ marginTop: 1, width: 200 }}
       >
         {options.map((option: Option) => {
           return (

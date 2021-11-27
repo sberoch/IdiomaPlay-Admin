@@ -11,7 +11,7 @@ export const LessonsCreate = (props: any) => {
   const [title, setTitle] = useState("");
   const [exercises, setExercises] = useState([]);
   const [exercisesChosen, setExercisesChosen] = useState<string[]>([]);
-  const [showError, setShowError] = useState(false)
+  const [showError, setShowError] = useState(false);
   let history = useHistory();
 
   useEffect(() => {
@@ -36,17 +36,25 @@ export const LessonsCreate = (props: any) => {
   };
 
   const inputErrors = () => {
-    const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
-    const exercisesIsEmpty = exercises.length === 0
-    const lessExercisesChosenThanAmountOfExercises = exercisesChosen.length <= exercises.length
-    const noExercisesChosen = exercisesChosen.length === 0; 
+    const titleOutOfRange =
+      title.length > config.maxTitleLength ||
+      title.length < config.minStringLength;
+    const exercisesIsEmpty = exercises.length === 0;
+    const lessExercisesChosenThanAmountOfExercises =
+      exercisesChosen.length <= exercises.length;
+    const noExercisesChosen = exercisesChosen.length === 0;
 
-    return titleOutOfRange || exercisesIsEmpty || !lessExercisesChosenThanAmountOfExercises || noExercisesChosen
-  }
+    return (
+      titleOutOfRange ||
+      exercisesIsEmpty ||
+      !lessExercisesChosenThanAmountOfExercises ||
+      noExercisesChosen
+    );
+  };
 
   const handleSubmit = async () => {
     //Postear al back
-    if (!inputErrors()){
+    if (!inputErrors()) {
       const res = await api.post(config.lessons, {
         title,
         exercisesIds: exercisesChosen.map((actual) => +actual),
@@ -104,6 +112,7 @@ export const LessonsCreate = (props: any) => {
             <Alerts
               showError={showError}
               setShowError={setShowError}
+              errorText={""}
             />
 
             <Button

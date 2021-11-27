@@ -1,44 +1,40 @@
-import { TextField } from '@material-ui/core';
-import { Button as ButtonCore } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
+import AddIcon from "@mui/icons-material/Add";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import EditIcon from '@mui/icons-material/Edit'
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from "@mui/icons-material/Save";
-import { LessonsAdd } from '../lessons/lessons.add';
-import { config } from '../../common/config';
+import { config } from "../../common/config";
 import Alerts from "../alerts/Alerts";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { LessonsAdd } from "../lessons/lessons.add";
 
 export const UnitsAdd = (props: any) => {
   const { unit } = props;
   const [showError, setShowError] = useState(false);
+  const [errorText, setErrorText] = useState("");
   const [title, setTitle] = useState("");
   const [lessons, setLessons] = useState<any[]>([]);
   const [addingLesson, setAddingLesson] = useState(false);
-  const [actualLesson, setActualLesson] = useState<any>(null)
+  const [actualLesson, setActualLesson] = useState<any>(null);
 
   useEffect(() => {
-    console.log(unit);
     if (unit) {
-      setTitle((prev) => unit.title);
-      setLessons((prev) => unit.lessons);
+      setTitle(unit.title);
+      setLessons(unit.lessons);
     }
-  }, [unit])
+  }, [unit]);
 
   const handleTitleChange = (e: any) => {
-    setTitle(e.target.value)
-  }
+    setTitle(e.target.value);
+  };
 
   const getNewIdForLesson = (array: any) => {
     if (array.length > 0) {
@@ -47,11 +43,14 @@ export const UnitsAdd = (props: any) => {
     } else {
       return array.length;
     }
-  }
+  };
 
   const removeOption = (id: string) => {
     setLessons((prev: any) => {
-      return prev.filter((actualPrevOption: any) => actualPrevOption.title.localeCompare(id) !== 0);
+      return prev.filter(
+        (actualPrevOption: any) =>
+          actualPrevOption.title.localeCompare(id) !== 0
+      );
     });
   };
 
@@ -66,166 +65,190 @@ export const UnitsAdd = (props: any) => {
         }
 
         return prev;
-      })
+      });
     } else {
       setLessons((prev: any) => {
         lesson.id = getNewIdForLesson(prev);
-        return [...prev, lesson]
-      })
+        return [...prev, lesson];
+      });
     }
     //Go back to units screen
     setAddingLesson(false);
     //Go back to creation mode if you were editing a lesson
-    setActualLesson(null)
-  }
+    setActualLesson(null);
+  };
 
   const inputErrors = () => {
-    const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
-    return titleOutOfRange
-  }
+    if (title.length > config.maxTitleLength) {
+      setErrorText(
+        `El título de la unidad debe contener menos de ${config.maxTitleLength} caracteres`
+      );
+      return true;
+    }
+    if (title.length < config.minStringLength) {
+      setErrorText(
+        `El título de la unidad debe contener al menos ${config.minStringLength} caracteres`
+      );
+      return true;
+    }
+    return false;
+  };
 
   const sendUnit = () => {
     if (!inputErrors()) {
-      props.handleSubmit({ "title": title, "lessons": lessons })
+      props.handleSubmit({ title: title, lessons: lessons });
     } else {
-      setShowError(true)
+      setShowError(true);
     }
-  }
+  };
 
   const getAddOrSaveButton = () => {
     if (unit) {
       return "Guardar";
     } else {
-      return "Agregar"
+      return "Crear";
     }
-  }
+  };
 
   return (
     <div>
-      {!addingLesson && <Grid container spacing={2}>
-        <Grid item sm={12}>
-          <IconButton
-            style={{
-              marginLeft: -40,
-              marginTop: -40,
-              marginBottom: -10
-            }}
-            onClick={() => { props.setAddingUnit(false) }}>
-            <ArrowBackIcon />
-          </IconButton>
-
-          <Box sx={{
-            marginLeft: 4
-          }}>
-            <Typography
+      {!addingLesson && (
+        <Grid container spacing={2}>
+          <Grid item sm={12}>
+            <IconButton
               style={{
-                marginTop: -38
+                marginTop: -30,
+                marginBottom: -10,
+                marginLeft: -40,
               }}
-              variant="h6"
-              gutterBottom>
-              Crear nueva unidad
-            </Typography>
+              onClick={() => {
+                props.setAddingUnit(false);
+              }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
 
-            <Box display="flex" sx={{ marginTop: 4 }}>
-              <TextField id="filled-basic" label="Titulo de la unidad" variant="filled" value={title} onChange={handleTitleChange} />
-            </Box>
-
-            <Grid item md={10}>
-              <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-                Lecciones
+            <Box>
+              <Typography
+                style={{
+                  marginTop: -32,
+                  marginLeft: 20,
+                }}
+                variant="h5"
+                gutterBottom
+              >
+                Crear nueva unidad
               </Typography>
-              <div>
-                {lessons.length === 0 &&
-                  <Typography
-                    style={{
-                      width: 200,
-                      fontSize: "14px",
-                      marginLeft: "0px",
-                      marginTop: 12
-                    }}>
-                    No has creado una lección aún
-                  </Typography>
-                }
-                {lessons.length > 0 && <List dense={true}>
-                  {lessons.map((lesson: any) => {
-                    return (
-                      <ListItem
-                        key={lesson.id}
-                        sx={{
-                          marginTop: 2,
-                          width: 300,
-                          marginLeft: -2
-                        }}
-                        secondaryAction={
-                          <IconButton edge="end" aria-label="delete" onClick={() => { removeOption(lesson.title) }}>
-                            <DeleteIcon />
-                          </IconButton>
-                        }
-                      >
-                        <ListItemAvatar>
-                          <Avatar>
-                            <FolderIcon />
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={lesson.title}
-                        />
-                        <IconButton onClick={() => {
-                          setActualLesson(lesson);
-                          setAddingLesson(true);
-                        }}>
-                          <EditIcon />
-                        </IconButton>
-                      </ListItem>
-                    );
-                  })}
-                </List>}
-              </div>
 
-              <Button
-                style={{
-                  marginTop: "10px",
-                  marginLeft: "-10px"
-                }}
-                onClick={() => {
-                  setActualLesson(null);
-                  setAddingLesson(true)
-                }}
-              >
-                Crear lección
-              </Button>
+              <Box display="flex" sx={{ marginTop: 5 }}>
+                <TextField
+                  id="filled-basic"
+                  label="Titulo de la unidad"
+                  variant="outlined"
+                  value={title}
+                  onChange={handleTitleChange}
+                />
+              </Box>
 
-              <ButtonCore
-                style={{
-                  borderRadius: 35,
-                  backgroundColor: "lightBlue",
-                  padding: "18px 36px",
-                  fontSize: "18px",
-                  marginTop: "25px",
-                  marginLeft: "-5px"
-                }}
-                onClick={() => { sendUnit() }}
-                variant="contained"
-                startIcon={<SaveIcon />}
-              >
-                { getAddOrSaveButton() }
-              </ButtonCore>
+              <Grid item md={10}>
+                <Typography sx={{ mt: 6 }} variant="h6" component="div">
+                  Lecciones
+                </Typography>
+                <div>
+                  {lessons.length === 0 && (
+                    <Typography
+                      style={{
+                        width: 200,
+                        fontSize: "14px",
+                        marginLeft: "0px",
+                        marginTop: 12,
+                      }}
+                    >
+                      No has creado una lección aún
+                    </Typography>
+                  )}
+                  {lessons.length > 0 && (
+                    <List dense={true}>
+                      {lessons.map((lesson: any) => {
+                        return (
+                          <ListItem
+                            key={lesson.id}
+                            sx={{
+                              width: 300,
+                              marginLeft: -2,
+                            }}
+                            secondaryAction={
+                              <IconButton
+                                edge="end"
+                                aria-label="delete"
+                                onClick={() => {
+                                  removeOption(lesson.title);
+                                }}
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            }
+                          >
+                            <ListItemText primary={lesson.title} />
+                            <IconButton
+                              onClick={() => {
+                                setActualLesson(lesson);
+                                setAddingLesson(true);
+                              }}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  )}
+                </div>
 
-            </Grid>
-          </Box>
+                <Button
+                  style={{
+                    marginTop: "10px",
+                    marginLeft: "-10px",
+                  }}
+                  onClick={() => {
+                    setActualLesson(null);
+                    setAddingLesson(true);
+                  }}
+                  startIcon={<AddIcon />}
+                >
+                  Agregar lección
+                </Button>
+
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => {
+                    sendUnit();
+                  }}
+                  size="large"
+                  sx={{ marginTop: 5 }}
+                >
+                  {getAddOrSaveButton()}
+                </Button>
+              </Grid>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>}
-      {addingLesson &&
+      )}
+      {addingLesson && (
         <LessonsAdd
           lesson={actualLesson}
           setAddingLesson={setAddingLesson}
-          handleSubmit={(lessonCreated: any) => { handleAddLesson(lessonCreated) }}
+          handleSubmit={(lessonCreated: any) => {
+            handleAddLesson(lessonCreated);
+          }}
         />
-      }
+      )}
       <Alerts
         showError={showError}
         setShowError={setShowError}
+        errorText={errorText}
       />
     </div>
-  )
-}
+  );
+};

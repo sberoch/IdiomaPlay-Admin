@@ -1,10 +1,14 @@
-import { Dialog } from '@material-ui/core';
-import { Alert, AlertTitle, Collapse } from '@mui/material'
-import React from 'react'
+import { Dialog } from "@material-ui/core";
+import { Alert, AlertTitle, Collapse } from "@mui/material";
+import React from "react";
 
-export default function Alerts(props: any) {
-  const { showError, setShowError } = props;
+interface Props {
+  showError: boolean;
+  setShowError(show: boolean): void;
+  errorText: string;
+}
 
+export default function Alerts({ showError, setShowError, errorText }: Props) {
   return (
     <div>
       <Dialog
@@ -14,17 +18,17 @@ export default function Alerts(props: any) {
         }}
       >
         <Collapse in={showError}>
-          <Alert 
+          <Alert
             severity="error"
             onClose={() => {
               setShowError(false);
             }}
           >
-            <AlertTitle> Error </AlertTitle>
-            Ocurrió un error en alguno de los datos
+            <AlertTitle>Error</AlertTitle>
+            {errorText}
           </Alert>
         </Collapse>
       </Dialog>
     </div>
-  )
+  );
 }

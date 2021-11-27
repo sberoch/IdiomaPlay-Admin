@@ -11,7 +11,7 @@ export const UnitsCreate = (props: any) => {
   const [title, setTitle] = useState("");
   const [lessons, setLessons] = useState([]);
   const [lessonsChosen, setLessonsChosen] = useState<string[]>([]);
-  const [showError, setShowError] = useState(false)
+  const [showError, setShowError] = useState(false);
   let history = useHistory();
 
   useEffect(() => {
@@ -36,13 +36,21 @@ export const UnitsCreate = (props: any) => {
   };
 
   const inputErrors = () => {
-    const titleOutOfRange = title.length > config.maxTitleLength || title.length < config.minStringLength
-    const lessonsIsEmpty = lessons.length === 0
-    const lessLessonsChosenThanAmountOfLessons = lessonsChosen.length <= lessons.length
-    const noLessonsChosen = lessonsChosen.length === 0; 
+    const titleOutOfRange =
+      title.length > config.maxTitleLength ||
+      title.length < config.minStringLength;
+    const lessonsIsEmpty = lessons.length === 0;
+    const lessLessonsChosenThanAmountOfLessons =
+      lessonsChosen.length <= lessons.length;
+    const noLessonsChosen = lessonsChosen.length === 0;
 
-    return titleOutOfRange || lessonsIsEmpty || !lessLessonsChosenThanAmountOfLessons || noLessonsChosen
-  }
+    return (
+      titleOutOfRange ||
+      lessonsIsEmpty ||
+      !lessLessonsChosenThanAmountOfLessons ||
+      noLessonsChosen
+    );
+  };
 
   const handleSubmit = async () => {
     //Postear al back
@@ -104,6 +112,7 @@ export const UnitsCreate = (props: any) => {
             <Alerts
               showError={showError}
               setShowError={setShowError}
+              errorText={""}
             />
 
             <Button
