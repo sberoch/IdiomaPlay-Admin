@@ -47,10 +47,16 @@ export const ExercisesAdd = (props: any) => {
 
   useEffect(() => {
     if (exercise) {
+      const options: Option[] = exercise.options.map(
+        (o: string, i: number) => ({
+          id: i,
+          text: o,
+        })
+      );
       setTitle(exercise.title);
       setSentence(exercise.sentence);
       setType(exercise.type);
-      setOptions(exercise.options);
+      setOptions(options);
       setCorrectOption(exercise.correctOption);
     }
   }, [exercise]);
@@ -122,7 +128,14 @@ export const ExercisesAdd = (props: any) => {
 
   const sendExercise = () => {
     if (!inputErrors()) {
-      props.handleSubmit({ title, sentence, type, options, correctOption });
+      const textOptions = options.map((o) => o.text);
+      props.handleSubmit({
+        title,
+        sentence,
+        type,
+        options: textOptions,
+        correctOption,
+      });
     } else {
       setShowError(true);
     }
