@@ -69,7 +69,6 @@ export const ChallengesEdit = (props: any) => {
     <FormWithRedirect {...props}
       render={formProps => (
         <form>
-          <a onClick={()=>{console.log(props)}}>VER PROPS</a>
           <Box
             sx={{
               display: 'flex',
