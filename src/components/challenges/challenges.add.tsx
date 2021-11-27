@@ -13,7 +13,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FormWithRedirect
 } from "react-admin";
@@ -24,11 +24,19 @@ import Alerts from "../alerts/Alerts";
 import { UnitsAdd } from '../units/units.add';
 
 export const ChallengesAdd = (props: any) => {
+    const { challenge } = props;
     const [showError, setShowError] = useState(false);
     const [title, setTitle] = useState("");
     const [units, setUnits] = useState<any[]>([]);
     const [addingUnit, setAddingUnit] = useState(false);
     const [actualUnit, setActualUnit] = useState<any>(null);
+
+    useEffect(() => {
+        if (challenge) {
+          setTitle((prev) => challenge.title);
+          setUnits((prev) => challenge.units);
+        }
+      }, [challenge])
 
     const getNewIdForUnit = (array: any) => {
         if (array.length > 0) {
@@ -55,6 +63,7 @@ export const ChallengesAdd = (props: any) => {
       }
     
       const handleAddUnit = (unit: any) => {
+          console.log(unit)
         if (actualUnit) {
           setUnits((prev: any) => {
             for (let i = 0; i < prev.length; i++) {

@@ -13,7 +13,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FormWithRedirect
 } from "react-admin";
@@ -26,6 +26,19 @@ import { ChallengesAdd } from './challenges.add';
 
 export const ChallengesEdit = (props: any) => {
   let history = useHistory();
+  let [challenge, setChallenge] = useState<any>(null)
+
+  useEffect(() => {
+    if (props.id) {
+      getChallenge();
+    }
+  }, [props.id])
+
+  const getChallenge = async () => {
+    const res = await api.get('challenges/'+props.id+'?full=true');
+    console.log(res.data)
+    setChallenge(res.data);
+  }
 
   const removeLocalIds = (challenge: any) => {
     for (let unit of challenge.units) {
@@ -67,8 +80,9 @@ export const ChallengesEdit = (props: any) => {
               m: 3,
             }}
           >
-            <ChallengesAdd
-              handleSubmit={(unitCreated: any) => { handleSubmit(unitCreated) }}/>
+            {challenge && <ChallengesAdd
+              handleSubmit={(unitCreated: any) => { handleSubmit(unitCreated) }}
+              challenge={challenge}/>}
           </Box>
         </form>
       )}
