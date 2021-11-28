@@ -1,8 +1,10 @@
 import * as React from "react";
 import {
   Datagrid,
+  Identifier,
   List,
   ReferenceInput,
+  RowClickFunction,
   SelectInput,
   TextField,
   TextInput,
@@ -23,15 +25,24 @@ const filters = [
   </ReferenceInput>,
 ];
 
-export const LessonsList = (props: any) => (
-  <List
-    {...props}
-    filters={filters}
-    actions={<NoActions />}
-    bulkActionButtons={false}
-  >
-    <Datagrid rowClick="edit">
-      <TextField source="title" label="Titulo" />
-    </Datagrid>
-  </List>
-);
+export const LessonsList = (props: any) => {
+  const onRowClick: RowClickFunction = (
+    basePath: Identifier,
+    id: string,
+    data: any
+  ) => {
+    return `/exercises?filter=${JSON.stringify({ lesson: data.id })}`;
+  } 
+  return (
+    <List
+      {...props}
+      filters={filters}
+      actions={<NoActions />}
+      bulkActionButtons={false}
+    >
+      <Datagrid rowClick={onRowClick}>
+        <TextField source="title" label="Titulo" />
+      </Datagrid>
+    </List>
+  )
+};

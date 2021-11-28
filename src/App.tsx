@@ -48,12 +48,7 @@ const App = () => (
     />
     <Resource name="units" list={UnitsList} />
     <Resource name="lessons" list={LessonsList} icon={LessonIcon} />
-    <Resource
-      name="exercises"
-      list={ExercisesList}
-      icon={ExercisesIcon}
-      options={{ label: "Ejercicios" }}
-    />
+    <Resource name="exercises" list={ExercisesList} icon={ExercisesIcon}/>
   </Admin>
 );
 
