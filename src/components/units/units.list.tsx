@@ -1,24 +1,17 @@
 import * as React from "react";
 import {
-  List,
   Datagrid,
-  TextField,
-  EditButton,
-  TopToolbar,
-  TextInput,
-  ReferenceInput,
-  SelectInput,
-  RowClickFunction,
   Identifier,
-  CreateButton,
-  DeleteButton,
+  List,
+  ReferenceInput,
+  RowClickFunction,
+  SelectInput,
+  TextField,
+  TextInput,
+  TopToolbar,
 } from "react-admin";
 
-const NoActions = () => (
-  <TopToolbar>
-    <CreateButton />
-  </TopToolbar>
-);
+const NoActions = () => <TopToolbar></TopToolbar>;
 const filters = [
   <TextInput source="title" label="Buscar" alwaysOn variant="outlined" />,
   <ReferenceInput
@@ -47,8 +40,6 @@ export const UnitsList = (props: any) => {
     >
       <Datagrid rowClick={onRowClick}>
         <TextField source="title" label="Titulo" />
-        <EditButton />
-        <DeleteButton />
       </Datagrid>
     </List>
   );

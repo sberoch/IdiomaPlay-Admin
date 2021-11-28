@@ -1,22 +1,15 @@
 import * as React from "react";
 import {
-  List,
   Datagrid,
-  TextField,
-  EditButton,
+  List,
   ReferenceInput,
   SelectInput,
+  TextField,
   TextInput,
   TopToolbar,
-  CreateButton,
-  DeleteButton,
 } from "react-admin";
 
-const NoActions = () => (
-  <TopToolbar>
-    <CreateButton />
-  </TopToolbar>
-);
+const NoActions = () => <TopToolbar></TopToolbar>;
 const filters = [
   <TextInput source="title" label="Buscar" alwaysOn variant="outlined" />,
   <ReferenceInput
@@ -39,8 +32,6 @@ export const LessonsList = (props: any) => (
   >
     <Datagrid rowClick="edit">
       <TextField source="title" label="Titulo" />
-      <EditButton />
-      <DeleteButton />
     </Datagrid>
   </List>
 );

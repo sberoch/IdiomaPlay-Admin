@@ -1,16 +1,16 @@
 import * as React from "react";
 import {
-  List,
+  CreateButton,
   Datagrid,
-  TextField,
   EditButton,
+  Identifier,
+  List,
+  RowClickFunction,
+  TextField,
   TextInput,
   TopToolbar,
-  RowClickFunction,
-  Identifier,
-  CreateButton,
-  DeleteButton,
 } from "react-admin";
+import { DisableCheckbox } from "./disableCheckbox";
 
 const NoActions = () => (
   <TopToolbar>
@@ -38,7 +38,7 @@ export const ChallengesList = (props: any) => {
       <Datagrid rowClick={onRowClick}>
         <TextField source="title" label="Titulo" />
         <EditButton />
-        <DeleteButton />
+        <DisableCheckbox />
       </Datagrid>
     </List>
   );
