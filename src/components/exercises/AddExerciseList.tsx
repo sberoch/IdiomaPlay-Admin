@@ -39,6 +39,7 @@ export default function AddExerciseList(props: Props) {
 
   const handleNewOption = () => {
     //If options doesn't already exist
+    if (text.length === 0) return;
     if (!options.some((actualOption: Option) => actualOption.text === text)) {
       setOptions((prev: Option[]) => [
         ...prev,

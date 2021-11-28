@@ -83,11 +83,10 @@ export const LessonsAdd = (props: any) => {
       );
       return true;
     }
-    //TODO: descomentar
-    // if (exercises.length !== 8) {
-    //   setErrorText(`Se deben agregar 8 ejercicios a la lección`);
-    //   return true;
-    // }
+    if (exercises.length !== 8) {
+      setErrorText(`Se deben agregar 8 ejercicios a la lección`);
+      return true;
+    }
     return false;
   };
 
