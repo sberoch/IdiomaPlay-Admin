@@ -1,12 +1,11 @@
 import * as React from "react";
 import {
-  TopToolbar,
   Datagrid,
   EmailField,
   List,
   NumberField,
   TextInput,
-  DeleteButton,
+  TopToolbar,
 } from "react-admin";
 
 const NoActions = () => <TopToolbar />;
@@ -25,7 +24,6 @@ export const UserList = (props: any) => (
     <Datagrid rowClick="edit">
       <EmailField source="email" />
       <NumberField source="points" label="Puntos" />
-      <DeleteButton />
     </Datagrid>
   </List>
 );
