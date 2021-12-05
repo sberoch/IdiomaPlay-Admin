@@ -36,7 +36,7 @@ export const ChallengesList = (props: any) => {
       bulkActionButtons={false}
     >
       <Datagrid rowClick={onRowClick}>
-        <TextField source="title" label="Titulo" />
+        <TextField source="title" label="Título" />
         <EditButton />
         <DisableCheckbox />
       </Datagrid>

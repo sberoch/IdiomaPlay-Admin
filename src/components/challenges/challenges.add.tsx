@@ -102,18 +102,26 @@ export const ChallengesAdd = (props: any) => {
     }
   };
 
+  const getAddOrSaveButton = () => {
+    if (challenge) {
+      return "Guardar";
+    } else {
+      return "Crear";
+    }
+  };
+
   return (
     <div>
       {!addingUnit && (
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography style={{ marginTop: -10 }} variant="h5" gutterBottom>
-              Crear un nuevo desafío
+              {challenge? "Editar desafío" : "Crear un nuevo desafío"}
             </Typography>
             <Box display="flex" sx={{ marginTop: 5 }}>
               <TextField
                 id="filled-basic"
-                label="Titulo del desafío"
+                label="Título del desafío"
                 variant="outlined"
                 value={title}
                 onChange={handleTitleChange}
@@ -179,6 +187,7 @@ export const ChallengesAdd = (props: any) => {
                 style={{
                   marginTop: "10px",
                   marginLeft: "-8px",
+                  color: "#3da6c7"
                 }}
                 onClick={() => {
                   setActualUnit(null);
@@ -190,13 +199,14 @@ export const ChallengesAdd = (props: any) => {
               </Button>
 
               <Button
+                style={{backgroundColor: "#3da6c7"}}
                 variant="contained"
                 fullWidth
                 onClick={() => sendChallenge()}
                 size="large"
                 sx={{ marginTop: 5 }}
               >
-                Crear
+                {getAddOrSaveButton()}
               </Button>
             </Grid>
           </Grid>

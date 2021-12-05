@@ -107,6 +107,14 @@ export const LessonsAdd = (props: any) => {
     });
   };
 
+  const getAddOrSaveButton = () => {
+    if (lesson) {
+      return "Guardar";
+    } else {
+      return "Crear";
+    }
+  };
+
   return (
     <div>
       {!addingExercise && (
@@ -134,12 +142,12 @@ export const LessonsAdd = (props: any) => {
                 variant="h5"
                 gutterBottom
               >
-                Crear nueva lección
+                {lesson? "Editar lección" : "Crear nueva lección"}
               </Typography>
               <Box display="flex" sx={{ marginTop: 5 }}>
                 <TextField
                   id="filled-basic"
-                  label="Titulo de la lección"
+                  label="Título de la lección"
                   variant="outlined"
                   value={title}
                   onChange={handleTitleChange}
@@ -205,6 +213,7 @@ export const LessonsAdd = (props: any) => {
                   style={{
                     marginTop: "10px",
                     marginLeft: "-10px",
+                    color: "#3da6c7"
                   }}
                   onClick={() => {
                     setActualExercise(null);
@@ -216,6 +225,7 @@ export const LessonsAdd = (props: any) => {
                 </Button>
 
                 <Button
+                  style={{backgroundColor: "#3da6c7"}}
                   variant="contained"
                   fullWidth
                   onClick={() => {
@@ -224,7 +234,7 @@ export const LessonsAdd = (props: any) => {
                   size="large"
                   sx={{ marginTop: 5 }}
                 >
-                  Crear
+                  {getAddOrSaveButton()}
                 </Button>
               </Grid>
             </Box>

@@ -44,11 +44,11 @@ const App = () => (
       edit={ChallengesEdit}
       create={ChallengesCreate}
       icon={PostIcon}
-      options={{ label: "Desafios" }}
+      options={{ label: "Desafíos" }}
     />
-    <Resource name="units" list={UnitsList} />
-    <Resource name="lessons" list={LessonsList} icon={LessonIcon} />
-    <Resource name="exercises" list={ExercisesList} icon={ExercisesIcon}/>
+    <Resource name="units" list={UnitsList} options={{ label: "Unidades" }}/>
+    <Resource name="lessons" list={LessonsList} icon={LessonIcon} options={{ label: "Lecciones" }}/>
+    <Resource name="exercises" list={ExercisesList} icon={ExercisesIcon} options={{ label: "Ejercicios" }}/>
   </Admin>
 );
 

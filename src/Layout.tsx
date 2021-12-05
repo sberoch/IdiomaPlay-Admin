@@ -8,7 +8,7 @@ export const MyMenu = (props: any) => (
     <MenuItemLink to="/users" primaryText="Usuarios" leftIcon={<UserIcon />} />
     <MenuItemLink
       to="/challenges"
-      primaryText="Desafios"
+      primaryText="Desafíos"
       leftIcon={<PostIcon />}
     />
   </Menu>

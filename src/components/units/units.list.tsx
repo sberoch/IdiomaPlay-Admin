@@ -39,7 +39,7 @@ export const UnitsList = (props: any) => {
       bulkActionButtons={false}
     >
       <Datagrid rowClick={onRowClick}>
-        <TextField source="title" label="Titulo" />
+        <TextField source="title" label="Título" />
       </Datagrid>
     </List>
   );

@@ -144,7 +144,7 @@ export const ExercisesCreate = (props: any) => {
                 <Box display="flex" sx={{ marginTop: 20 }}>
                   <TextField
                     id="filled-basic"
-                    label="Titulo del ejercicio"
+                    label="Título del ejercicio"
                     variant="filled"
                     value={title}
                     onChange={handleTitleChange}

@@ -57,10 +57,10 @@ export default function AddExerciseList(props: Props) {
 
     if (options.length < totalOptions) {
       return (
-        <Box display="flex" sx={{ marginTop: -4 }}>
+        <Box display="flex" sx={{ marginTop: 10 }}>
           <TextField
             id="filled-basic"
-            label="Nueva opcion"
+            label="Nueva opción"
             variant="outlined"
             value={text}
             onChange={handleTextChange}

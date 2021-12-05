@@ -103,23 +103,23 @@ export const ExercisesAdd = (props: any) => {
     }
     if (sentence.length < config.minStringLength) {
       setErrorText(
-        `El la oracion del ejercicio debe contener al menos ${config.minStringLength} caracteres`
+        `La oración del ejercicio debe contener al menos ${config.minStringLength} caracteres`
       );
       return true;
     }
     if (type === types.complete.text && !sentence.includes("*")) {
       setErrorText(
-        "La oracion debe incluir un * para indicar el espacio a completar"
+        "La oración debe incluir un * para indicar el espacio a completar"
       );
       return true;
     }
     if (correctOption === "") {
-      setErrorText(`Se requiere la opcion correcta`);
+      setErrorText(`Se requiere la opción correcta`);
       return true;
     }
     if (!options.some((o: Option) => o.text === correctOption)) {
       setErrorText(
-        `La opcion correcta seleccionada debe permanecer a las opciones posibles`
+        `La opción correcta seleccionada debe permanecer a las opciones posibles`
       );
       return true;
     }
@@ -158,6 +158,14 @@ export const ExercisesAdd = (props: any) => {
     return type ? 6 : 12;
   };
 
+  const getAddOrSaveButton = () => {
+    if (exercise) {
+      return "Guardar";
+    } else {
+      return "Crear";
+    }
+  };
+
   return (
     <Container>
       <Grid container spacing={4}>
@@ -181,12 +189,12 @@ export const ExercisesAdd = (props: any) => {
             variant="h5"
             gutterBottom
           >
-            Crear ejercicio
+            {exercise? "Editar ejercicio" : "Crear nuevo ejercicio"}
           </Typography>
           <Box sx={{ marginTop: 3 }}>
             <TextField
               id="filled-basic"
-              label="Titulo del ejercicio"
+              label="Título del ejercicio"
               variant="outlined"
               value={title}
               onChange={handleTitleChange}
@@ -260,6 +268,7 @@ export const ExercisesAdd = (props: any) => {
               </Box>
 
               <Button
+                style={{backgroundColor: "#3da6c7"}}
                 variant="contained"
                 fullWidth
                 onClick={() => {
@@ -268,7 +277,7 @@ export const ExercisesAdd = (props: any) => {
                 size="large"
                 sx={{ marginTop: 5 }}
               >
-                Crear
+                {getAddOrSaveButton()}
               </Button>
             </Box>
           )}

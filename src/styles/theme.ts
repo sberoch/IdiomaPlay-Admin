@@ -6,6 +6,9 @@ export const theme = merge({}, defaultTheme, {
     primary: {
       main: "#3da6c7",
     },
+    secondary: {
+      main: "#3da6c7",
+    },
   },
   typography: {
     fontFamily: "lato, sans-serif",

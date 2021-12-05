@@ -18,8 +18,8 @@ const types = [
   { id: "translate_new_to_old", name: "translate_new_to_old" },
 ];
 const filters = [
-  <TextInput source="title" label="Titulo" alwaysOn variant="outlined" />,
-  <TextInput source="sentence" label="Oracion" alwaysOn variant="outlined" />,
+  <TextInput source="title" label="Título" alwaysOn variant="outlined" />,
+  <TextInput source="sentence" label="Oración" alwaysOn variant="outlined" />,
   <SelectInput
     source="type"
     label="Tipo"
@@ -37,8 +37,8 @@ export const ExercisesList = (props: any) => (
     bulkActionButtons={false}
   >
     <Datagrid rowClick="edit">
-      <TextField source="title" label="Titulo" />
-      <TextField source="sentence" label="Oracion" />
+      <TextField source="title" label="Título" />
+      <TextField source="sentence" label="Oración" />
       <ChipField source="type" label="Tipo" />
     </Datagrid>
   </List>

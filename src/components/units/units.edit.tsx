@@ -8,7 +8,7 @@ export const UnitsEdit = (props: EditProps) => (
       <TextInput
         source="exam.title"
         variant="outlined"
-        label="Titulo del examen"
+        label="Título del examen"
       />
       <TextInput
         source="exam.examTimeInSeconds"

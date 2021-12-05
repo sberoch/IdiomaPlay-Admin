@@ -137,13 +137,13 @@ export const UnitsAdd = (props: any) => {
                 variant="h5"
                 gutterBottom
               >
-                Crear nueva unidad
+                {unit? "Editar unidad" : "Crear nueva unidad"}
               </Typography>
 
               <Box display="flex" sx={{ marginTop: 5 }}>
                 <TextField
                   id="filled-basic"
-                  label="Titulo de la unidad"
+                  label="Título de la unidad"
                   variant="outlined"
                   value={title}
                   onChange={handleTitleChange}
@@ -209,6 +209,7 @@ export const UnitsAdd = (props: any) => {
                   style={{
                     marginTop: "10px",
                     marginLeft: "-10px",
+                    color: "#3da6c7"
                   }}
                   onClick={() => {
                     setActualLesson(null);
@@ -220,6 +221,7 @@ export const UnitsAdd = (props: any) => {
                 </Button>
 
                 <Button
+                  style={{backgroundColor: "#3da6c7"}}
                   variant="contained"
                   fullWidth
                   onClick={() => {
