@@ -1,13 +1,23 @@
 import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
 import { FormWithRedirect } from "react-admin";
-import { useHistory } from "react-router-dom";
+//import { useHistory } from "react-router-dom";
 import api from "../../api/axios";
 import { ChallengesAdd } from "./challenges.add";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export const ChallengesEdit = (props: any) => {
-  let history = useHistory();
+  //let history = useHistory();
   let [challenge, setChallenge] = useState<any>(null);
+  const [alertOpened, setAlertOpened] = useState(false);
 
   useEffect(() => {
     if (props.id) {
@@ -41,37 +51,50 @@ export const ChallengesEdit = (props: any) => {
       units: challenge.units,
     });
     console.log(res);
+    setAlertOpened(true);
     //Redirect
-    history.push("/challenges");
+    //history.push("/challenges");
   };
 
   return (
-    <FormWithRedirect
-      {...props}
-      render={(formProps) => (
-        <form>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "flex-start",
-              flexDirection: "column",
-              paddingLeft: 0,
-              p: 1,
-              m: 3,
-            }}
-          >
-            {challenge && (
-              <ChallengesAdd
-                handleSubmit={(unitCreated: any) => {
-                  handleSubmit(unitCreated);
-                }}
-                challenge={challenge}
-              />
-            )}
-          </Box>
-        </form>
-      )}
-    />
+    <>
+      <FormWithRedirect
+        {...props}
+        render={(formProps) => (
+          <form>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "flex-start",
+                flexDirection: "column",
+                paddingLeft: 0,
+                p: 1,
+                m: 3,
+              }}
+            >
+              {challenge && (
+                <ChallengesAdd
+                  handleSubmit={(unitCreated: any) => {
+                    handleSubmit(unitCreated);
+                  }}
+                  challenge={challenge}
+                />
+              )}
+            </Box>
+          </form>
+        )}
+      />
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={alertOpened}
+        autoHideDuration={3000}
+        onClose={() => {
+          setAlertOpened(false);
+        }}
+      >
+        <Alert severity="success">Desafío creado correctamente!</Alert>
+      </Snackbar>
+    </>
   );
 };
 
