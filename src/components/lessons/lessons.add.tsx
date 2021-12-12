@@ -15,6 +15,11 @@ import { useEffect, useState } from "react";
 import { config } from "../../common/config";
 import Alerts from "../alerts/Alerts";
 import { ExercisesAdd } from "../exercises/exercises.add";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 export const LessonsAdd = (props: any) => {
   const { lesson } = props;
@@ -24,6 +29,8 @@ export const LessonsAdd = (props: any) => {
   const [exercises, setExercises] = useState<Array<any>>([]);
   const [actualExercise, setActualExercise] = useState<any>(null);
   const [addingExercise, setAddingExercise] = useState(false);
+  const [openRemoveItem, setOpenRemoveItem] = useState(false);
+  const [toBeRemovedItem, setToBeRemovedItem] = useState<any>(undefined);
 
   useEffect(() => {
     console.log(lesson);
@@ -98,13 +105,19 @@ export const LessonsAdd = (props: any) => {
     }
   };
 
-  const removeExercise = (title: string) => {
-    setExercises((prev: any) => {
-      return prev.filter(
-        (actualPrevOption: any) =>
-          actualPrevOption.title.localeCompare(title) !== 0
-      );
-    });
+  const removeOption = () => {
+    setExercises((prev: any) =>
+      prev.filter(
+        (actualPrevOption: any) => actualPrevOption.id !== toBeRemovedItem.id
+      )
+    );
+    setToBeRemovedItem(undefined);
+    setOpenRemoveItem(false);
+  };
+
+  const handleRemoveClick = (item: any) => {
+    setOpenRemoveItem(true);
+    setToBeRemovedItem(item);
   };
 
   const getAddOrSaveButton = () => {
@@ -142,7 +155,7 @@ export const LessonsAdd = (props: any) => {
                 variant="h5"
                 gutterBottom
               >
-                {lesson? "Editar lección" : "Crear nueva lección"}
+                {lesson ? "Editar lección" : "Crear nueva lección"}
               </Typography>
               <Box display="flex" sx={{ marginTop: 5 }}>
                 <TextField
@@ -186,7 +199,7 @@ export const LessonsAdd = (props: any) => {
                                 edge="end"
                                 aria-label="delete"
                                 onClick={() => {
-                                  removeExercise(exercise.title);
+                                  handleRemoveClick(exercise);
                                 }}
                               >
                                 <DeleteIcon />
@@ -213,7 +226,7 @@ export const LessonsAdd = (props: any) => {
                   style={{
                     marginTop: "10px",
                     marginLeft: "-10px",
-                    color: "#3da6c7"
+                    color: "#3da6c7",
                   }}
                   onClick={() => {
                     setActualExercise(null);
@@ -225,7 +238,7 @@ export const LessonsAdd = (props: any) => {
                 </Button>
 
                 <Button
-                  style={{backgroundColor: "#3da6c7"}}
+                  style={{ backgroundColor: "#3da6c7" }}
                   variant="contained"
                   fullWidth
                   onClick={() => {
@@ -256,6 +269,26 @@ export const LessonsAdd = (props: any) => {
         setShowError={setShowError}
         errorText={errorText}
       />
+
+      <Dialog
+        open={openRemoveItem}
+        onClose={() => setOpenRemoveItem(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">¿Esta seguro?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Esta acción es irreversible
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenRemoveItem(false)}>Cancelar</Button>
+          <Button onClick={removeOption} autoFocus>
+            Borrar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

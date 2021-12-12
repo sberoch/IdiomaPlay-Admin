@@ -15,6 +15,11 @@ import { useEffect, useState } from "react";
 import { config } from "../../common/config";
 import Alerts from "../alerts/Alerts";
 import { LessonsAdd } from "../lessons/lessons.add";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 export const UnitsAdd = (props: any) => {
   const { unit } = props;
@@ -24,6 +29,8 @@ export const UnitsAdd = (props: any) => {
   const [lessons, setLessons] = useState<any[]>([]);
   const [addingLesson, setAddingLesson] = useState(false);
   const [actualLesson, setActualLesson] = useState<any>(null);
+  const [openRemoveItem, setOpenRemoveItem] = useState(false);
+  const [toBeRemovedItem, setToBeRemovedItem] = useState<any>(undefined);
 
   useEffect(() => {
     if (unit) {
@@ -45,13 +52,19 @@ export const UnitsAdd = (props: any) => {
     }
   };
 
-  const removeOption = (id: string) => {
-    setLessons((prev: any) => {
-      return prev.filter(
-        (actualPrevOption: any) =>
-          actualPrevOption.title.localeCompare(id) !== 0
-      );
-    });
+  const removeOption = () => {
+    setLessons((prev: any) =>
+      prev.filter(
+        (actualPrevOption: any) => actualPrevOption.id !== toBeRemovedItem.id
+      )
+    );
+    setToBeRemovedItem(undefined);
+    setOpenRemoveItem(false);
+  };
+
+  const handleRemoveClick = (item: any) => {
+    setOpenRemoveItem(true);
+    setToBeRemovedItem(item);
   };
 
   const handleAddLesson = (lesson: any) => {
@@ -137,7 +150,7 @@ export const UnitsAdd = (props: any) => {
                 variant="h5"
                 gutterBottom
               >
-                {unit? "Editar unidad" : "Crear nueva unidad"}
+                {unit ? "Editar unidad" : "Crear nueva unidad"}
               </Typography>
 
               <Box display="flex" sx={{ marginTop: 5 }}>
@@ -182,7 +195,7 @@ export const UnitsAdd = (props: any) => {
                                 edge="end"
                                 aria-label="delete"
                                 onClick={() => {
-                                  removeOption(lesson.title);
+                                  handleRemoveClick(lesson);
                                 }}
                               >
                                 <DeleteIcon />
@@ -209,7 +222,7 @@ export const UnitsAdd = (props: any) => {
                   style={{
                     marginTop: "10px",
                     marginLeft: "-10px",
-                    color: "#3da6c7"
+                    color: "#3da6c7",
                   }}
                   onClick={() => {
                     setActualLesson(null);
@@ -221,7 +234,7 @@ export const UnitsAdd = (props: any) => {
                 </Button>
 
                 <Button
-                  style={{backgroundColor: "#3da6c7"}}
+                  style={{ backgroundColor: "#3da6c7" }}
                   variant="contained"
                   fullWidth
                   onClick={() => {
@@ -251,6 +264,26 @@ export const UnitsAdd = (props: any) => {
         setShowError={setShowError}
         errorText={errorText}
       />
+
+      <Dialog
+        open={openRemoveItem}
+        onClose={() => setOpenRemoveItem(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">¿Esta seguro?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Esta acción es irreversible
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenRemoveItem(false)}>Cancelar</Button>
+          <Button onClick={removeOption} autoFocus>
+            Borrar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
