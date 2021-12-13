@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
 import { FormWithRedirect } from "react-admin";
-//import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import api from "../../api/axios";
 import { ChallengesAdd } from "./challenges.add";
 import Snackbar from "@mui/material/Snackbar";
@@ -15,7 +15,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 export const ChallengesEdit = (props: any) => {
-  //let history = useHistory();
+  let history = useHistory();
   let [challenge, setChallenge] = useState<any>(null);
   const [alertOpened, setAlertOpened] = useState(false);
 
@@ -53,7 +53,8 @@ export const ChallengesEdit = (props: any) => {
     console.log(res);
     setAlertOpened(true);
     //Redirect
-    //history.push("/challenges");
+    console.log("Pushing to challenges")
+    history.push("/challenges");
   };
 
   return (
