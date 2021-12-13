@@ -20,6 +20,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import api from "../../api/axios";
 
 export const UnitsAdd = (props: any) => {
   const { unit } = props;
@@ -31,12 +32,27 @@ export const UnitsAdd = (props: any) => {
   const [actualLesson, setActualLesson] = useState<any>(null);
   const [openRemoveItem, setOpenRemoveItem] = useState(false);
   const [toBeRemovedItem, setToBeRemovedItem] = useState<any>(undefined);
+  const [canDelete, setCanDelete] = useState(true);
 
   useEffect(() => {
     if (unit) {
       setTitle(unit.title);
       setLessons(unit.lessons);
     }
+  }, [unit]);
+
+  useEffect(() => {
+    async function getParticipations() {
+      const res = await api.get("/participations", {
+        params: {
+          unit: unit?.id,
+        },
+      });
+      if (res.data.length !== 0) {
+        setCanDelete(false);
+      }
+    }
+    getParticipations();
   }, [unit]);
 
   const handleTitleChange = (e: any) => {
@@ -191,15 +207,19 @@ export const UnitsAdd = (props: any) => {
                               marginLeft: -2,
                             }}
                             secondaryAction={
-                              <IconButton
-                                edge="end"
-                                aria-label="delete"
-                                onClick={() => {
-                                  handleRemoveClick(lesson);
-                                }}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
+                              <div>
+                                {canDelete ? (
+                                  <IconButton
+                                    edge="end"
+                                    aria-label="delete"
+                                    onClick={() => {
+                                      handleRemoveClick(lesson);
+                                    }}
+                                  >
+                                    <DeleteIcon />
+                                  </IconButton>
+                                ) : undefined}
+                              </div>
                             }
                           >
                             <ListItemText primary={lesson.title} />
@@ -253,6 +273,7 @@ export const UnitsAdd = (props: any) => {
       {addingLesson && (
         <LessonsAdd
           lesson={actualLesson}
+          unit={unit}
           setAddingLesson={setAddingLesson}
           handleSubmit={(lessonCreated: any) => {
             handleAddLesson(lessonCreated);

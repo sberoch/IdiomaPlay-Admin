@@ -20,9 +20,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import api from "../../api/axios";
 
 export const LessonsAdd = (props: any) => {
-  const { lesson } = props;
+  const { lesson, unit } = props;
   const [showError, setShowError] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [title, setTitle] = useState("");
@@ -31,6 +32,7 @@ export const LessonsAdd = (props: any) => {
   const [addingExercise, setAddingExercise] = useState(false);
   const [openRemoveItem, setOpenRemoveItem] = useState(false);
   const [toBeRemovedItem, setToBeRemovedItem] = useState<any>(undefined);
+  const [canDelete, setCanDelete] = useState(true);
 
   useEffect(() => {
     console.log(lesson);
@@ -39,6 +41,20 @@ export const LessonsAdd = (props: any) => {
       setExercises((prev) => lesson.exercises);
     }
   }, [lesson]);
+
+  useEffect(() => {
+    async function getParticipations() {
+      const res = await api.get("/participations", {
+        params: {
+          unit: unit?.id,
+        },
+      });
+      if (res.data.length !== 0) {
+        setCanDelete(false);
+      }
+    }
+    getParticipations();
+  }, [unit]);
 
   const handleTitleChange = (e: any) => {
     setTitle(e.target.value);
@@ -195,15 +211,19 @@ export const LessonsAdd = (props: any) => {
                               marginLeft: -2,
                             }}
                             secondaryAction={
-                              <IconButton
-                                edge="end"
-                                aria-label="delete"
-                                onClick={() => {
-                                  handleRemoveClick(exercise);
-                                }}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
+                              <div>
+                                {canDelete ? (
+                                  <IconButton
+                                    edge="end"
+                                    aria-label="delete"
+                                    onClick={() => {
+                                      handleRemoveClick(exercise);
+                                    }}
+                                  >
+                                    <DeleteIcon />
+                                  </IconButton>
+                                ) : undefined}
+                              </div>
                             }
                           >
                             <ListItemText primary={exercise.title} />
