@@ -1,6 +1,7 @@
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import Typography from "@mui/material/Typography";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -50,5 +51,12 @@ export function AccessFrecuencyDoughnutChart(props: any) {
       },
     ],
   };
-  return <Doughnut data={data} options={options} />;
+  return (
+    <>
+      <Doughnut data={data} options={options} />
+      <Typography variant="caption" color="gray">
+        * Este grafico no se ve afectado por los filtros de fechas
+      </Typography>
+    </>
+  );
 }

@@ -46,19 +46,21 @@ export const Dashboard = () => {
   const [from, setFrom] = useState<Date | null>(
     new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
   );
-  const [to, setTo] = useState<Date | null>(new Date());
+  const [to, setTo] = useState<Date | null>(
+    new Date(new Date().setHours(0, 0, 0, 0))
+  );
 
   const handleFromChange = (date: MaterialUiPickersDate) => {
     let fromDate = date;
     if (to) {
       const diff = (to!.getTime() - date!.getTime()) / 86400000;
       if (diff > 90) {
-        console.log({ diff, to: to.toString(), date: date?.toString() });
         fromDate = getDaysBackFromDate(to, 91);
         setAlertText("La ventana de tiempo máxima es de 90 días");
         setAlertOpened(true);
       }
-      if (date!.getTime() > to?.getTime()) {
+
+      if (date!.getTime() >= to?.getTime()) {
         setAlertText("Rango de fechas erróneo");
         setAlertOpened(true);
         fromDate = from;
@@ -248,7 +250,7 @@ export const Dashboard = () => {
                 values={accessFrecuency.values}
               />
             }
-            title="Frecuencia de acceso de usuarios"
+            title="Frecuencia de acceso de usuarios *"
           />
         </div>
       </div>
