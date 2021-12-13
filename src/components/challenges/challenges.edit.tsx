@@ -46,15 +46,14 @@ export const ChallengesEdit = (props: any) => {
   const handleSubmit = async (challenge: any) => {
     //Postear al back{
     challenge = removeLocalIds(challenge);
-    const res = await api.patch("challenges/" + props.id, {
+    await api.patch("challenges/" + props.id, {
       title: challenge.title,
       units: challenge.units,
     });
-    console.log(res);
     setAlertOpened(true);
-    //Redirect
-    console.log("Pushing to challenges")
-    history.push("/challenges");
+    setTimeout(() => {
+      history.push("/challenges");
+    }, 2000);
   };
 
   return (
@@ -93,7 +92,7 @@ export const ChallengesEdit = (props: any) => {
           setAlertOpened(false);
         }}
       >
-        <Alert severity="success">Desafío creado correctamente!</Alert>
+        <Alert severity="success">Desafío editado correctamente!</Alert>
       </Snackbar>
     </>
   );

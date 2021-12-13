@@ -36,14 +36,14 @@ export const ChallengesCreate = (props: any) => {
   const handleSubmit = async (challenge: any) => {
     //Postear al back{
     challenge = removeLocalIds(challenge);
-    const res = await api.post(config.challenges, {
+    await api.post(config.challenges, {
       title: challenge.title,
       units: challenge.units,
     });
     setAlertOpened(true);
-    console.log(res);
-    //Redirect
-    history.push("/challenges");
+    setTimeout(() => {
+      history.push("/challenges");
+    }, 2000);
   };
 
   return (
