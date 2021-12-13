@@ -1,6 +1,7 @@
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { Card } from "@material-ui/core";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
@@ -9,9 +10,20 @@ import { BarChart } from "./barchart";
 import { ChartContainer } from "./chartContainer";
 import { LineChart } from "./linechart";
 import { MeanTimeChart } from "./meantimechart";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export const Dashboard = () => {
   const [meanTimeExams, setMeanTimeExams] = useState(0);
+  const [alertOpened, setAlertOpened] = useState(false);
+  const [alertText, setAlertText] = useState("");
   const [dailyActiveUsers, setDailyActiveUSers] = useState({
     dates: [],
     values: [],
@@ -36,11 +48,36 @@ export const Dashboard = () => {
   );
   const [to, setTo] = useState<Date | null>(new Date());
 
+  const handleFromChange = (date: MaterialUiPickersDate) => {
+    let fromDate = date;
+    if (to) {
+      const diff = (to!.getTime() - date!.getTime()) / 86400000;
+      if (diff > 90) {
+        console.log({ diff, to: to.toString(), date: date?.toString() });
+        fromDate = getDaysBackFromDate(to, 91);
+        setAlertText("La ventana de tiempo máxima es de 90 días");
+        setAlertOpened(true);
+      }
+      if (date!.getTime() > to?.getTime()) {
+        setAlertText("Rango de fechas erróneo");
+        setAlertOpened(true);
+        fromDate = from;
+      }
+    }
+    setFrom(fromDate);
+  };
+
   const parseDate = (dateString: string) => {
     var date = new Date(dateString);
     var day = date.getUTCDate();
     var month = date.getUTCMonth() + 1;
     return day + "/" + month;
+  };
+
+  const getDaysBackFromDate = (date: Date, days: number) => {
+    const result = new Date(date);
+    result.setDate(result.getDate() - days);
+    return result;
   };
 
   const getMeanTimeExams = async () => {
@@ -121,8 +158,6 @@ export const Dashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [from, to]);
 
-  console.log("asd");
-
   return (
     <Card>
       <div
@@ -135,7 +170,7 @@ export const Dashboard = () => {
             label="Desde"
             variant="dialog"
             value={from}
-            onChange={setFrom}
+            onChange={handleFromChange}
             format="dd/MM/yy"
           />
           <DatePicker
@@ -217,6 +252,16 @@ export const Dashboard = () => {
           />
         </div>
       </div>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={alertOpened}
+        autoHideDuration={3000}
+        onClose={() => {
+          setAlertOpened(false);
+        }}
+      >
+        <Alert severity="warning">{alertText}</Alert>
+      </Snackbar>
     </Card>
   );
 };
