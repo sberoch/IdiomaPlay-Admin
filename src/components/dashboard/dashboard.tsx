@@ -44,11 +44,16 @@ export const Dashboard = () => {
     values: [],
   });
   const [from, setFrom] = useState<Date | null>(
-    new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+    new Date(
+      new Date(new Date().setHours(0, 0, 0, 0)).getTime() -
+        7 * 24 * 60 * 60 * 1000
+    )
   );
   const [to, setTo] = useState<Date | null>(
     new Date(new Date().setHours(0, 0, 0, 0))
   );
+
+  console.log({ from, to });
 
   const handleFromChange = (date: MaterialUiPickersDate) => {
     let fromDate = date;
@@ -66,6 +71,7 @@ export const Dashboard = () => {
         fromDate = from;
       }
     }
+    fromDate?.setHours(0, 0, 0, 0);
     setFrom(fromDate);
   };
 
@@ -83,9 +89,11 @@ export const Dashboard = () => {
   };
 
   const getMeanTimeExams = async () => {
+    const fromToSend = new Date(from!);
+    fromToSend.setHours(from!.getHours() - 3);
     const res = await api.get("/stats/mean-time-exams", {
       params: {
-        from: from,
+        from: fromToSend,
         to: to,
       },
     });
@@ -94,9 +102,11 @@ export const Dashboard = () => {
   };
 
   const getDailyActiveUsers = async (from: Date | null, to: Date | null) => {
+    const fromToSend = new Date(from!);
+    fromToSend.setHours(from!.getHours() - 3);
     const res = await api.get("/stats/daily-active-users", {
       params: {
-        from: from,
+        from: fromToSend,
         to: to,
       },
     });
@@ -111,9 +121,11 @@ export const Dashboard = () => {
   };
 
   const getDailyCompletedUnits = async () => {
+    const fromToSend = new Date(from!);
+    fromToSend.setHours(from!.getHours() - 3);
     const res = await api.get("/stats/daily-completed-units", {
       params: {
-        from: from,
+        from: fromToSend,
         to: to,
       },
     });
@@ -140,9 +152,11 @@ export const Dashboard = () => {
   };
 
   const getPassedExams = async () => {
+    const fromToSend = new Date(from!);
+    fromToSend.setHours(from!.getHours() - 3);
     const res = await api.get("/stats/passed-exams", {
       params: {
-        from: from,
+        from: fromToSend,
         to: to,
       },
     });
