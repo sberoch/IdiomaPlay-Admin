@@ -7,6 +7,7 @@ import { config } from "../../common/config";
 import { ChallengesAdd } from "./challenges.add";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import { useHistory } from "react-router-dom";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -16,7 +17,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 export const ChallengesCreate = (props: any) => {
-  //let history = useHistory();
+  let history = useHistory();
   const [alertOpened, setAlertOpened] = useState(false);
 
   const removeLocalIds = (challenge: any) => {
@@ -42,7 +43,7 @@ export const ChallengesCreate = (props: any) => {
     setAlertOpened(true);
     console.log(res);
     //Redirect
-    //history.push("/challenges");
+    history.push("/challenges");
   };
 
   return (
