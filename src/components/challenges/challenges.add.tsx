@@ -211,6 +211,7 @@ export const ChallengesAdd = (props: any) => {
                 style={{
                   marginTop: "10px",
                   marginLeft: "-8px",
+                  color: "#3da6c7",
                 }}
                 onClick={() => {
                   setActualUnit(null);
@@ -226,6 +227,7 @@ export const ChallengesAdd = (props: any) => {
                 fullWidth
                 onClick={() => sendChallenge()}
                 size="large"
+                style={{ backgroundColor: "#3da6c7" }}
                 sx={{ marginTop: 5 }}
               >
                 Crear

@@ -75,6 +75,19 @@ export const Dashboard = () => {
     setFrom(fromDate);
   };
 
+  const handleToChange = (date: MaterialUiPickersDate) => {
+    let toDate = date;
+    if (from) {
+      if (from.getTime() >= date!.getTime()) {
+        setAlertText("Rango de fechas erróneo");
+        setAlertOpened(true);
+        toDate = to;
+      }
+    }
+    toDate?.setHours(0, 0, 0, 0);
+    setTo(toDate);
+  };
+
   const parseDate = (dateString: string) => {
     var date = new Date(dateString);
     var day = date.getUTCDate();
@@ -91,23 +104,27 @@ export const Dashboard = () => {
   const getMeanTimeExams = async () => {
     const fromToSend = new Date(from!);
     fromToSend.setHours(from!.getHours() - 3);
+    const toToSend = new Date(to!);
+    toToSend.setHours(to!.getHours() - 3);
     const res = await api.get("/stats/mean-time-exams", {
       params: {
         from: fromToSend,
-        to: to,
+        to: toToSend,
       },
     });
     console.log(res.data);
     setMeanTimeExams(res.data);
   };
 
-  const getDailyActiveUsers = async (from: Date | null, to: Date | null) => {
+  const getDailyActiveUsers = async () => {
     const fromToSend = new Date(from!);
     fromToSend.setHours(from!.getHours() - 3);
+    const toToSend = new Date(to!);
+    toToSend.setHours(to!.getHours() - 3);
     const res = await api.get("/stats/daily-active-users", {
       params: {
         from: fromToSend,
-        to: to,
+        to: toToSend,
       },
     });
     console.log(res.data);
@@ -123,10 +140,12 @@ export const Dashboard = () => {
   const getDailyCompletedUnits = async () => {
     const fromToSend = new Date(from!);
     fromToSend.setHours(from!.getHours() - 3);
+    const toToSend = new Date(to!);
+    toToSend.setHours(to!.getHours() - 3);
     const res = await api.get("/stats/daily-completed-units", {
       params: {
         from: fromToSend,
-        to: to,
+        to: toToSend,
       },
     });
     console.log(res.data);
@@ -154,10 +173,12 @@ export const Dashboard = () => {
   const getPassedExams = async () => {
     const fromToSend = new Date(from!);
     fromToSend.setHours(from!.getHours() - 3);
+    const toToSend = new Date(to!);
+    toToSend.setHours(to!.getHours() - 3);
     const res = await api.get("/stats/passed-exams", {
       params: {
         from: fromToSend,
-        to: to,
+        to: toToSend,
       },
     });
     var categories = Object.keys(res.data) as string[];
@@ -166,7 +187,7 @@ export const Dashboard = () => {
   };
 
   useEffect(() => {
-    getDailyActiveUsers(from, to);
+    getDailyActiveUsers();
     getMeanTimeExams();
     getDailyCompletedUnits();
     getAccessFrecuency();
@@ -194,7 +215,7 @@ export const Dashboard = () => {
             label="Hasta"
             variant="dialog"
             value={to}
-            onChange={setTo}
+            onChange={handleToChange}
             format="dd/MM/yy"
           />
         </MuiPickersUtilsProvider>
